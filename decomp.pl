@@ -259,18 +259,6 @@ $prog =~ s@,AOX,C/0022;([^;]+);,YTA,\(31C\)@\1@g;
 $prog =~ s@,AOX,C/0022;(,NTR,3;)?([^;]+);14,VJM,P/0060@\2@g;
 $prog =~ s@\(74000C\)@NIL@g;
 
-# Known globals
-
-if (open(GLOBALS, "globals.txt")) {
-    while (<GLOBALS>) {
-        chop;
-        my ($offset, $name) = split;
-        $prog =~ s@gl${offset}z@$name@g || print STDERR "Global $offset not found\n";
-    }
-    close(GLOBALS);
-} else {
-    print STDERR "File globals.txt not found, no names replaced\n";
-}
 
 if (open(LOCALS, "locals.txt")) {
     while (<LOCALS>) {
@@ -294,6 +282,31 @@ if (%routines) {
 
 # Converting indirect addressing
 while ($prog =~ s@;,WTC,([^;]+);([^;]+)@;\2\[\1\]@g) { }
+
+# Known globals
+
+if (open(GLOBALS, "globals.txt")) {
+    while (<GLOBALS>) {
+        chop;
+        my ($offset, $name, $len) = split;
+        if ($len) {
+            print STDERR "Looking for global array $name at offset $offset with length $len\n";
+            # This is an array (with base 1) of length len
+            # Therefore only indirect addressing with that name must be converted
+            $prog =~ s@gl${offset}z\[@$name\[@g || print STDERR "Global $offset not found\n";
+            # And the following len globals must be renamed to name[index]
+            for ($i = 1; $i <= $len; ++$i) {
+                $look = 'gl'.($offset+$i).'z';
+                $prog =~ s@$look@$name\[$i\]@g; # Not all offsets must be present
+            }
+        } else {
+            $prog =~ s@gl${offset}z@$name@g || print STDERR "Global $offset not found\n";
+        }
+    }
+    close(GLOBALS);
+} else {
+    print STDERR "File globals.txt not found, no names replaced\n";
+}
 
 $prog =~ s@;,UTC,([^;]+);([^;]*?),([^,;]+);@;\2,*(&\1+\3);@g;
 # $prog =~ s@;14,UTC,([^;]+);([^;]*?),([^,;]+);@;\2,\3[R14+\1];@g;
@@ -752,71 +765,6 @@ sub convertIntSet {
     return $bitset;
 }
 
-@gender = ('UNKSEX', 'MASC', 'FEM');
-
-$prog =~ s@(Gender[^;]+?)\(([0-7][0-7]?)C\)@"$1$gender[oct($2)]"@ge;
-
-if (open(SYMBOL, "symbol.txt")) {
-    while (<SYMBOL>) {
-        my ($val, $name) = split;
-        $symbol[oct($val)] = $name;
-    }
-    close(SYMBOL);
-    
-    $prog =~ s@(($context)[^;]+?)\(([0-7][0-7]?)C\)@"$1$symbol[oct($3)]"@ge;
-
-    $prog =~ s@SY IN ([^;]*?)\(([0-7]+)C\)@"SY IN $1".convertEnumSet($2, \ \@symbol)@ge;
-    $prog =~ s@(skipToSet|statBegSys|statEndSys|blockBegSys) ([^;]*?)\(([0-7]+)C\)@"$1 $2".convertEnumSet($3, \ \@symbol)@ge;
-} else {
-    print STDERR "symbol.txt not found, SY enums not replaced\n";
-}
-
-if (open(OPERATOR, "operator.txt")) {
-    while (<OPERATOR>) {
-        my ($val, $name) = split;
-        $oper[oct($val)] = $name;
-    }
-    close(OPERATOR);
-    $context = 'charClass';
-    
-    $prog =~ s@(($context)[^;]+?)\(([0-7][0-7]?)C\)@"$1$oper[oct($3)]"@ge;
-    $prog =~ s@charClass IN ([^;]*?)\(([0-7]+)C\)@"charClass IN $1".convertEnumSet($2, \ \@oper)@ge;
-    $prog =~ s@(lvalOpSet) ([^;]*?)\(([0-7]+)C\)@"$1 $2".convertEnumSet($3, \ \@oper)@ge;
-
-} else {
-    print STDERR "operator.txt not found, OP enums not replaced\n";
-}
-
-if (open(OPTIONS, "options.txt")) {
-    while (<OPTIONS>) {
-        my ($val, $name) = split;
-        $opts[oct($val)] = $name;
-    }
-    close(OPTIONS);
-    # $context = 'optSflags';
-    
-    # $prog =~ s@(($context)[^;]+?)=([0-7][0-7]?)([^0-7])@"$1$oper[oct($3)]$4"@ge;
-    $prog =~ s@optSflags ([^;]*?)\(([0-7]+)C\)@"optSflags $1".convertEnumSet($2, \ \@opts)@ge;
-
-} else {
-    print STDERR "operator.txt not found, OP enums not replaced\n";
-}
-
-if (open(FORM, "form.txt")) {
-    while (<FORM>) {
-        my ($val, $name) = split;
-        $form[oct($val)] = $name;
-    }
-    close(FORM);
-    $context = 'formOperator';
-    
-    $prog =~ s@(($context)[^;]+?)\(([0-7][0-7]?)C\)@"$1$form[oct($3)]"@ge;
-    # $prog =~ s@formOperator ([^;]*?)=([0-7]+)@"formOperator $1".convertEnumSet($2, \ \@form)@ge;
-
-} else {
-    print STDERR "operator.txt not found, OP enums not replaced\n";
-}
-
 # Converting chars based on context
 $prog =~ s@(CH [^;]+)\(([0-7][0-7][0-7]?)C\)@"$1'".chr(oct($2))."'"@ge;
 
@@ -827,30 +775,6 @@ $prog =~ s@ \& \(([0-7]+)C\)@" * ".convertIntSet($1)@ge;
 
 $prog =~ s@(if[^;]*)\(\(\(([0-7]+)C\) \^ allones\) \& ([^()]+)\)@"$1 not ($3 <= ".convertIntSet($2).')'@ge;
 $prog =~ s@\(\(\(([0-7]+)C\) \^ allones\) \& ([^()]+)\)@"($2 - ".convertIntSet($1).')'@ge;
-    
-if (open(HELPERS, "helpers.txt")) {
-    while (<HELPERS>) {
-        chop;
-        my ($val, $name) = split;
-#        $prog =~ s@(getHelperProc[^;]+)int\($val\)@\1"$name"@g;
-         $prog =~ s@(getHelperProc[^;]+)\($val\)@\1"$name"@g;
-         $prog =~ s@(P0715[^;,]+?,[^;]+?)\($val\)@\1"$name"@g;
-    }
-    close(HELPERS);
-} else {
-    print STDERR "File helpers.txt not found, no names replaced\n";
-}
-
-if (open(ERRORS, "errors.txt")) {
-    while (<ERRORS>) {
-        chop;
-        my ($val, $name) = split;
-        $prog =~ s@((error|errAndSkip|printErrMsg)[^;]+)\($val\)@\1$name@g;
-    }
-    close(ERRORS);
-} else {
-    print STDERR "File errors.txt not found, no names replaced\n";
-}
 
 # Convert if/then/else (nesting not handled due to label reuse)
 
@@ -946,6 +870,8 @@ $prog =~ s@R13 := &6;writeAlfa\( &6, ([^;]+) \)@write(\1)@g;
 
 $prog =~ s/output@ := \((\d+)C\);put.output./"write('".gost(oct($1))."')"/ge;
 
+# Converting remaining stray ATX to assignments
+$prog =~ s@,ATX,([^;]+)@\1 := @g;
 #Restoring line feeds
 
 $prog =~ s/;/;\n /g;

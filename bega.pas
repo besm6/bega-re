@@ -34,30 +34,15 @@ awake:boolean;
 gl42z, gl43z, gl44z:integer;
 gl45z: _array [1..39] _of integer;
 tempfile:text;
-bulk:_record f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10,
-f11, f12, f13, f14: real
-_end;
-gl385z, gl386z, gl387z, gl388z, gl389z, gl390z, gl390a:integer; gl391z: _array[1..10] _of integer;
+gl370z, gl371z, gl372z, gl373z, gl374z: integer;
+field: _array [1..10] _of integer;
+gl385z, gl386z, gl387z, gl388z:integer;
+gl389z,
+gl390z:boolean; gl390a:integer; display: _array[1..100] _of alfa;
 _procedure filler; 
 _(
 
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
+(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
@@ -174,7 +159,7 @@ _(
  _if (gl20z = 1) _then
  l2v3z := (44C)
  _else l2v3z := (26C);
- _if (a < l2v3z) _and (a > 0) _then P3030(0);
+ _if (a <= l2v3z) _and (a > 0) _then P3030(0);
 _);
 
 _function getDate:integer;
@@ -306,12 +291,12 @@ _procedure P3432(l2a1z:integer);
 _(
   code(K;7ПАГ502=2СЧ3,7ЛС=,2ЗЧ3=2Э0713,7ПБ1=,С;Г502:0120000200000000,К;);
 _);
-
-_procedure P3442(l2a1z, l2a2z: integer; _var l2a3z: _array [1..100] _of integer);
-_var l2v1z:integer; l2v2z: @integer;
+(*=m+*)
+_procedure P3442(l2a1z, l2a2z: integer; _var l2a3z: _array [1..100] _of alfa);
+_var l2v1z:integer; l2v2z: @alfa;
 _(
  l2v1z := trunc(l2a2z / 10);
-  l2a2z := l2a2z - l2v1z*2; (q) _exit q; (q) _exit q;
+  l2a2z := l2a2z - l2v1z*2; 
  l2v1z := l2a1z;
   code(7пагг1=сд/-14/,7лс=17зч,);
  l2a2z := l2a2z;
@@ -585,7 +570,7 @@ _( (* landing *)
 _); (* landing *)
 
 _procedure tictactoe;
-_var l2v1z, l2v2z, l2v3z:integer; arr:_array [1..100] _of integer;
+_var l2v1z, l2v2z, l2v3z:integer; arr:_array [1..100] _of alfa;
 _procedure P4725;
 _(
   P3442( gl388z, 1, arr);
@@ -610,14 +595,14 @@ _(
     writeln(' .  .');
   _);
   _for l2v2z := (1C) _to (14C) _do _(
-    arr[l2v2z] := (5002724050027240C);
+  arr[l2v2z] := '{240{056{240{240{056{240'; (* ' .  . ' in ISO *)
   _);
-  arr[13] := (5002724050027000C);
+  arr[13] := '{240{056{240{240{056{000'; (* ' .  .' in ISO *)
   P4725;
   _for l2v2z := (1C) _to (7C) _do _(
-    arr[l2v2z] := (4210421046304210C);
+    arr[l2v2z] := '{210{210{210{231{210{210'; 
   _);
-  arr[8] := (4210421042104000C);
+  arr[8] := '{210{210{210{210{210{000';;
   P4725;
   P3432( gl388z );
   _GOTO 11230;
@@ -629,14 +614,15 @@ _(
   rand := (l2v1z _MOD l2a1z);
 _);
 _procedure P5034;
-_var l2v1z, l2v2z, l2v3z, l2v4z, l2v5z, l2v6z, l2v7z: integer;
-arr:_array [1..100] _of integer;
+_label 1;
+_var l2v1z, l2v2z:alfa; l2v3z, l2v4z, l2v5z, l2v6z, l2v7z: integer;
+arr:_array [1..100] _of alfa;
 _(
-  gl391z[gl385z] := (0C);
+  display[gl385z] := '{000{000{000{000{000{000';
   l2v7z := (1C);
   l2v6z := (0C);
   _for l2v4z := (1C) _to gl385z _do _(
-    l2v1z := gl391z[l2v4z];
+    l2v1z := display[l2v4z];
     _for l2v5z := (1C) _to (6C) _do _(
       code(2СЧ3=СД/-10/,2ЗЧ3=МР0,2ЗЧ5=,);
       _if (l2v3z <> (128)) _then _(
@@ -651,11 +637,195 @@ _(
     _);
     _if (l2v4z = gl385z) _then
       _for l2v6z := (l2v6z + (1C)) _to (6C) _do
-  (* code(2СЧ4=СД/-10/,2ЗЧ4=,); *) l2v2z := l2v2z * 256;
+        code(2СЧ4=СД/-10/,2ЗЧ4=,); (* l2v2z := l2v2z << 8 *)
       arr[l2v7z] := l2v2z;
   _);
-  (* ... *)
+  gl385z := 1;
+  P3442( gl388z, 1, arr);
+  1: _case  extra71( gl388z ) _of
+    0: sleep(4);
+    2: exit;
+    3: _GOTO 11132
+  _end; _goto 1;
 _);
+_procedure P5131(l2a1z: integer);
+_(
+  _if ((l2a1z > 6) _and _not gl389z) _or (l2a1z > 7) _then _(
+    (*=C-*)
+    display[1] := 311523246515232C; (* 014 232x5 *)
+    display[2] := 4651523246515232C; (* 232x6 *)
+    display[3] := 4270561342705613C; (* 213x6 *)
+    display[4] := ;
+    (*=C+*)
+    gl385z := (5C);
+    P5034;
+  _);
+  _case l2a1z _of
+  1: writeln('ИГРА К ВАШИМ УСЛУГАМ{175НУЖНЫ ПРАВИЛА ?');
+  3: writeln('ВАШ ХОД:');
+  8: writeln('ПОЗДРАВЛЯЮ! ВЫ ВЫИГРАЛИ');
+  5: writeln('ХОТИТЕ ИГРАТЬ БЕЛЫМИ ?');
+  6: writeln('ХОТИТЕ ИГРАТЬ ЕЩЕ ?');
+  7: writeln('ВЫ ПРОИГРАЛИ');
+  4: writeln('ПОВТОРЕНИЕ ПОЗИЦИИ');
+  9: writeln('ВЫ ОШИБЛИСЬ !');
+  10: writeln('НАБЕРИТЕ "ДА" ИЛИ "НЕТ" !');
+  11: writeln('НЕВЕРНЫЙ ХОД !');
+  12: writeln('ЭТО НЕ ХОД !')
+  _end;
+  _if (l2a1z > 8) _then
+    P5131( gl386z )
+  _else
+    gl386z := l2a1z;
+_);
+
+_procedure P5252;
+_var l2v1z: integer;
+_(
+  _for l2v1z := 2 _to 10 _do
+    field[l2v1z] := 0;
+  field[1] := 2;
+  gl374z := ;
+  field[3] := ;
+  field[5] := 1;
+  gl370z := 0;
+  gl371z := 1;
+  gl372z := 3;
+  gl373z := 5;
+_);
+_procedure P5272(l2a1z:integer);
+_var l2v1z:integer; a:_array [1..6] _of char;
+_(
+  _if (l2a1z = 1) _then
+    P5252;
+  (*=C-*)
+  display[1] := (4771763747717637C);
+  display[2] := ;
+  display[3] := (5012024050120240C);
+  display[4] := ;
+  display[11] := ;
+  display[12] := ;
+  display[19] := ;
+  display[20] := ;
+  display[27] := ;
+  display[65] := ;
+  display[73] := ;
+  display[74] := ;
+  display[81] := ;
+  display[82] := ;
+  display[89] := ;
+  display[90] := ;
+  display[5] := 1322645513226455C; (* 055x6 ------ *)
+  display[7] := ;
+  display[9] := ;
+  display[21] := ;
+  display[23] := ;
+  display[25] := ;
+  display[35] := ;
+  display[37] := ;
+  display[39] := ;
+  display[41] := ;
+  display[43] := ;
+  display[55] := ;
+  display[57] := ;
+  display[59] := ;
+  display[61] := ;
+  display[63] := ;
+  display[75] := ;
+  display[77] := ;
+  display[79] := ;
+  display[91] := ;
+  display[93] := ;
+  display[95] := ;
+  display[14] := (6222645513226455C);
+  display[16] := ;
+  display[46] := ;
+  display[48] := ;
+  display[50] := ;
+  display[52] := ;
+  display[84] := ;
+  display[86] := ;
+  display[29] := (5012024062320240C);
+  display[31] := ;
+  display[33] := ;
+  display[67] := ;
+  display[69] := ;
+  display[71] := ;
+  display[6] := (1332024050120240C);
+  display[8] := ;
+  display[36] := ;
+  display[38] := ;
+  display[40] := ;
+  display[42] := ;
+  display[22] := ;
+  display[24] := ;
+  display[56] := ;
+  display[58] := ;
+  display[60] := ;
+  display[62] := ;
+  display[76] := ;
+  display[78] := ;
+  display[92] := ;
+  display[94] := ;
+  display[10] := (1320520040100200C);
+  display[26] := ;
+  display[80] := ;
+  display[18] := (6220520040100200C);
+  display[88] := ;
+  display[28] := (5012024053720240C);
+  display[32] := ;
+  display[68] := ;
+  display[30] := (5012024027120240C);
+  display[66] := ;
+  display[70] := ;
+  display[34] := (5012024027120012C);
+  display[72] := (5012024053720012C);
+  display[54] := (5014441240100200C);
+  display[44] := (1322641240100200C);
+  display[64] := ;
+  display[96] := 13205T; (* 055 012 *)
+  (*=C+*)
+  l2v1z := (0C);
+  _while (l2v1z <= 9) _do _(
+    a[1] := chr(201);
+    a[3] := chr(160);
+    a[6] := ;
+    _case field[l2v1z] _of
+    1: _( a[4] := chr(126);  a[5] := ; _); (* ЧЧ *)
+    2: _( a[4] := chr(226);  a[5] := ; _); (* ББ *)
+    0: _( a[4] := chr(160);  a[5] := ; _)  (*    *)
+    _end;
+    _case l2v1z _of
+    0: _( a[2] := chr(60C); gl385z := (55C); _);
+    1: _( a[2] := chr(177); gl385z := (15C); _);
+    2: _( a[2] := chr(178); gl385z := (57C); _);
+    3: _( a[2] := chr(63C); gl385z := (123C); _);
+    4: _( a[2] := chr(180); gl385z := (125C); _);
+    5: _( a[2] := chr(65C); gl385z := (61C); _);
+    6: _( a[2] := chr(66C); gl385z := (17C); _);
+    7: _( a[2] := chr(183); gl385z := (21C); _);
+    8: _( a[2] := chr(184); gl385z := (63C); _);
+    9: _( a[2] := chr(71C); gl385z := (127C); _)
+    _end;
+   pck(a[1], display[gl385z]);
+   l2v1z := l2v1z+1;
+  _);
+  a[1] := chr(201);
+  a[2] := chr(177);
+  a[3] := chr(60C);
+  a[4] := chr(160);
+  _case field[10] _of
+    1: _( a[5] := chr(126);  a[6] := ; _); (* ЧЧ *)
+    2: _( a[5] := chr(226);  a[6] := ; _); (* ББ *)
+    0: _( a[5] := chr(160);  a[6] := ; _)  (*    *)
+  _end;
+  pck(a[1], display[53]);
+  gl385z := (141C);
+  P5034;
+  _if gl390z _and (gl386z <> 5) _and (gl386z <> 6) _then
+    P5131( gl386z );
+_);
+
 _procedure checkers;
 _procedure rules;
 _(
@@ -673,6 +843,7 @@ _(
 _);
 _( (* checkers *)
 mymove(0, rand(1));
+  P5272(0);
 _);
 _FUNСТI RАNDОМ:RЕАL;(* СЛУЧАЙНОЕ ЧИСЛО В (0,1) *)
 _(
@@ -732,6 +903,7 @@ write(getDate, getTime, zeller(0,0,0)); printTenths(0); readZone(0,0);
   sleep(0);write(extra71(0));
   P3432(0); landing(true);
   tictactoe;
+  checkers;
 11132:; 11136:; 11176:; 11204:; 11210:; 11214:; 11220:; 11227:; 11230:; 11244: ;
 writeln('НЕ ПОНИМАЮ');
 _).     

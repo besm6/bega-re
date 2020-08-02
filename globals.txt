@@ -1,2 +1,4 @@
 40	hardCopy
 84	tempfile
+374	field 10
+391	display 100
