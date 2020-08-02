@@ -34,11 +34,14 @@ awake:boolean;
 gl42z, gl43z, gl44z:integer;
 gl45z: _array [1..39] _of integer;
 tempfile:text;
+bulk:_record f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10,
+f11, f12, f13, f14: real
+_end;
+gl385z, gl386z, gl387z, gl388z, gl389z, gl390z, gl390a:integer; gl391z: _array[1..10] _of integer;
 _procedure filler; 
 _(
 
-(q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
+(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
@@ -304,8 +307,8 @@ _(
   code(K;7ПАГ502=2СЧ3,7ЛС=,2ЗЧ3=2Э0713,7ПБ1=,С;Г502:0120000200000000,К;);
 _);
 
-_procedure P3442(l2a1z, l2a2z, l2a3z: integer);
-_var l2v1z, l2v2z: integer;
+_procedure P3442(l2a1z, l2a2z: integer; _var l2a3z: _array [1..100] _of integer);
+_var l2v1z:integer; l2v2z: @integer;
 _(
  l2v1z := trunc(l2a2z / 10);
   l2a2z := l2a2z - l2v1z*2; (q) _exit q; (q) _exit q;
@@ -313,12 +316,12 @@ _(
   code(7пагг1=сд/-14/,7лс=17зч,);
  l2a2z := l2a2z;
   code(сд/-53/=7рб2,17лс=7зч1,);
- l2v2z := l2a3z;
+ l2v2z := ref(l2a3z);
   code(уи7=иагг1,э0711=,иагг1=пб3,с;гг1:3420000035000323,0,217000000000000,к;);
 _);
 
 _procedure landing(eng: boolean);
-_label 4354, 4410, 4514, 4636, 4720;
+_label 4410, 4514, 4636;
 _type arr = _record
 f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10,
 f11, f12, f13, f14, f15, f16, f17, f18, f19, f20: real
@@ -460,132 +463,207 @@ _( (* landing *)
   landMsg(10);
   l2v45z := 0;
   ruined := 0;
-  4354:
-  checkTime;
-  checkPerm;
-  _if eng _then P3030(3) _else P3030(10);
-  landMsg(11);
-  interval := 10;
-  temp := (0C);
-  altitude := 120;
-  Vmps := 1.0;
-  mass := 32500;
-  drymass := mass - fuel;
-  epsilon := 1.000000000001e-3;
-  l2v31z := 1.8;
-  _if (l2v45z = 0) _then
-   saved := l2v1z@
-  _else
-   l2v45z := (1C);
+  (L4354) _(
+    checkTime;
+    checkPerm;
+    _if eng _then P3030(3) _else P3030(10);
+    landMsg(11);
+    interval := 10;
+    temp := (0C);
+    altitude := 120;
+    Vmps := 1.0;
+    mass := 32500;
+    drymass := mass - fuel;
+    epsilon := 1.000000000001e-3;
+    l2v31z := 1.8;
+    _if (l2v45z = 0) _then
+      saved := l2v1z@
+    _else
+      l2v45z := (1C);
   4410:
-  write(round(temp):5, trunc(altitude):13);
-  write(trunc((((altitude - (trunc(altitude))) * (5280)) + (0.5))):8);
-  write(trunc((((5280) * Vmps) + (0.5))):9);
-  write(round(((mass) - drymass)):13 );
+    write(round(temp):5, trunc(altitude):13);
+    write(trunc((((altitude - (trunc(altitude))) * (5280)) + (0.5))):8);
+    write(trunc((((5280) * Vmps) + (0.5))):9);
+    write(round(((mass) - drymass)):13 );
   
-  _if verbose _then write(Vmps * Vmps / altitude:0);
-  P2775;
- (rate) _(
- _if eng _then BIND('{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146FUEL RATE={172')
- _else BIND('{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146РАСХОД={172');
- getval(usage);
-  _if ((usage < 8.0) _or (usage > 200)) _and (usage <> 0.0) _then _(
-     landMsg(12);
-     _goto rate;
-  _)
-  _);
- (* 4466 *)
- _for cursec := 1 _to interval _do _(
-  l2v32z := 1.0;
- (* L4472:,BSS,; *)
- (L4472) _if mass - drymass < 1.000000000001e-3 _then _( (* else 4617 *)
-   msgarg := round(temp);
-   landMsg(12);
-  deltaT := ((-(Vmps) + SQRT(((Vmps * Vmps) + ((2 * altitude) * epsilon)))) / epsilon);
-  Vmps := ((epsilon * deltaT) + Vmps);
-  temp := (temp + deltaT);
-  4514: msgarg := round(temp);
-  landMsg(14); (* on the Moon at ... sec *)
-  Vfps := (5280 * Vmps);
-  msgarg := round(Vfps);
-  landMsg(15); (* impact velocity *)
-  temp := mass - drymass;
-  _if temp < 0.0 _then temp := 0.0;
-  msgarg := round( temp );
-  landMsg(16); (* fuel remaining *)
-  _if Vfps <= 3 _then landMsg(17) (* perfect *)
-  _else _if Vfps <= 15 _then landMsg(18) (* good *)
-  _else _if Vfps <= 35 _then landMsg(19) (* no Buck Rogers *)
-  _else _if Vfps <= 80 _then landMsg(20) (* heavy damage *)
-  _else _(
-    msgarg := trunc(0.19 * Vfps);
-    landMsg(21); (* crater *)
-    ruined := ruined + 1;
-    dead;
-    (q) _exit q; (* aligning *)
-  _);
-  (* 4570 *)
-  _if eng _then BIND('ТRY АGAIN (1) OR NOT (0) ? {172')
-  _else BIND('ЕЩЕ РАЗ (1) ИЛИ ВСЕ (0) ? {172');
+    _if verbose _then write(Vmps * Vmps / altitude:0);
+    P2775;
+    (rate) _(
+      _if eng _then
+        BIND('{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146FUEL RATE={172')
+      _else
+        BIND('{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146РАСХОД={172');
+      getval(usage);
+      _if ((usage < 8.0) _or (usage > 200)) _and (usage <> 0.0) _then _(
+        landMsg(12);
+        _goto rate;
+      _)
+    _);
+    (* 4466 *)
+    _for cursec := 1 _to interval _do _(
+      l2v32z := 1.0;
+      (* L4472:,BSS,; *)
+      (L4472) _if mass - drymass < 1.000000000001e-3 _then _( (* else 4617 *)
+        msgarg := round(temp);
+        landMsg(12);
+        deltaT := ((-(Vmps) + SQRT(((Vmps * Vmps) + ((2 * altitude) * epsilon)))) / epsilon);
+        Vmps := ((epsilon * deltaT) + Vmps);
+        temp := (temp + deltaT);
+  4514:
+        msgarg := round(temp);
+        landMsg(14); (* on the Moon at ... sec *)
+        Vfps := (5280 * Vmps);
+        msgarg := round(Vfps);
+        landMsg(15); (* impact velocity *)
+        temp := mass - drymass;
+        _if temp < 0.0 _then temp := 0.0;
+        msgarg := round( temp );
+        landMsg(16); (* fuel remaining *)
+        _if Vfps <= 3 _then landMsg(17) (* perfect *)
+        _else _if Vfps <= 15 _then landMsg(18) (* good *)
+        _else _if Vfps <= 35 _then landMsg(19) (* no Buck Rogers *)
+        _else _if Vfps <= 80 _then landMsg(20) (* heavy damage *)
+        _else _(
+          msgarg := trunc(0.19 * Vfps);
+          landMsg(21); (* crater *)
+          ruined := ruined + 1;
+          dead;
+          (q) _exit q; (* aligning *)
+        _);
+        (* 4570 *)
+        _if eng _then BIND('ТRY АGAIN (1) OR NOT (0) ? {172')
+        _else BIND('ЕЩЕ РАЗ (1) ИЛИ ВСЕ (0) ? {172');
 
-  _if (input@ <> '0') _then _goto 4354;
-  _if (ruined = 0) _then landMsg(22)
-  _else _(
-    l2v23z := (ruined * 34.23);
-    msgarg := round( l2v23z );
-    landMsg(23);
-    msgarg := ruined;
-    _if (ruined = 1) _then landMsg(24) _else landMsg(25);
-  _);
- ending;
-  _) _else _( (* 4617 *)
-   _if (l2v32z < (1.000000000001e-3)) _then _( (q) _goto 4720 _);
-   deltaT := l2v32z;
-   _if ((((deltaT) * usage) + drymass) > mass) _then
-     deltaT := (((mass) - drymass) / usage);
-   (* 4632 *)
-   P4250;
-  _if (newalt <= 0.0) _then 4636: _(
-  _if (deltaT < 5.0e-3) _then
-   _goto 4514;
-   deltaT := ((2.0 * altitude) / (SQRT(((Vmps * Vmps) + ((2.0 * altitude) * (epsilon - (((l2v31z) * usage) / mass))))) + Vmps));
-   P4250;
-   update;
-  _goto 4636;
-  _);
- (* 4655 *)
-  _if (Vmps <= 0.0) _then _(
-     update;
-    _goto L4472;
-  _);
-  _if (l2v35z < 0.0) _then (L4664) _(
-  Vfps := ((1.0 - ((mass * epsilon) / (l2v31z * usage))) / 2.0);
-  deltaT := (((mass * Vmps) / ((l2v31z * usage) * (SQRT(((Vfps * Vfps) + (Vmps / l2v31z))) + Vfps))) + 0.04999999999995);
- P4250;  
-  _if (newalt <= 0.0) _then _goto 4636;
- update;
-  _if (-l2v35z > 0.0) _and (Vmps > 0.0) _then _( _) _else _goto L4472;
-  _goto L4664; 
-  _) _else _(
-   update;
-  _goto L4472;
-  _);
-  _); (* 4472 if *)
-  4720:;
-  _); (* for *)
-  _goto 4410;
-_);
+        _if (input@ <> '0') _then _goto L4354;
+        _if (ruined = 0) _then landMsg(22)
+        _else _(
+          l2v23z := (ruined * 34.23);
+          msgarg := round( l2v23z );
+          landMsg(23);
+          msgarg := ruined;
+          _if (ruined = 1) _then landMsg(24) _else landMsg(25);
+        _);
+        ending;
+      _) _else _if (l2v32z < (1.000000000001e-3)) _then _exit L4472 _else _(
+        deltaT := l2v32z;
+        _if ((((deltaT) * usage) + drymass) > mass) _then
+          deltaT := (((mass) - drymass) / usage);
+        (* 4632 *)
+        P4250;
+        _if (newalt <= 0.0) _then
+  4636: _(
+          _if (deltaT < 5.0e-3) _then
+            _goto 4514;
+          deltaT := ((2.0 * altitude) / (SQRT(((Vmps * Vmps) + ((2.0 * altitude) * (epsilon - (((l2v31z) * usage) / mass))))) + Vmps));
+          P4250;
+          update;
+          _goto 4636;
+        _);
+        (* 4655 *)
+        _if (Vmps <= 0.0) _then _(
+          update;
+          _goto L4472;
+        _);
+        _if (l2v35z < 0.0) _then (L4664) _(
+          Vfps := ((1.0 - ((mass * epsilon) / (l2v31z * usage))) / 2.0);
+          deltaT := (((mass * Vmps) / ((l2v31z * usage) * (SQRT(((Vfps * Vfps) + (Vmps / l2v31z))) + Vfps))) + 0.04999999999995);
+          P4250;  
+          _if (newalt <= 0.0) _then
+            _goto 4636;
+          update;
+          _if ((-l2v35z > 0.0) _and (Vmps > 0.0)) _then _( _) _else _goto L4472;
+          _goto L4664; 
+        _) _else _(
+          update;
+          _goto L4472;
+        _);
+      _); (* 4472 if *)
+    _); (* for *)
+    _goto 4410;
+  _); (* L4354 *)
+  ending;
+_); (* landing *)
+
 _procedure tictactoe;
+_var l2v1z, l2v2z, l2v3z:integer; arr:_array [1..100] _of integer;
+_procedure P4725;
 _(
-write('{175           =---> ПЕРЕД НАЧАЛОМ ИГРЫ СДЕЛАЙТЕ "ОFF LINЕ" <---={175');
-write(' .  . ');
-write(' .  .');
-write('ПРАВИЛА ИГРЫ:{175{175 ПОЛЕ ДЛЯ ИГРЫ СОСТОИТ ИЗ 11 КЛЕТОК.{175 КЛЕТКИ ПОЛЯ ИМЕЮТ НОМЕРА ОТ 0 ДО 10.{175 В ИГРЕ ПРИНИМАЮТ УЧАСТИЕ ТРИ БЕЛЫЕ И ОДНА ЧЕРНАЯ ФИШКИ.{175 НАЧАЛЬНОЕ ПОЛОЖЕНИЕ ИЗОБРАЖЕНО НА РИСУНКЕ:{175');
-write('{175 БЕЛЫЕ НА КЛЕТКАХ 0,1,3, ЧЕРНАЯ НА КЛЕТКЕ 5. ВОЗМОЖНЫЕ НАПРАВЛЕНИЯ{175ДВИЖЕНИЯ ПОКАЗАНЫ ЧЕРТОЧКАМИ. БЕЛЫЕ ФИШКИ МОГУТ ХОДИТЬ ТОЛЬКО{175ВПЕРЕД И ВБОК. НАПРИМЕР, ЕСЛИ БЕЛАЯ ФИШКА СТОИТ НА ПОЛЕ 5, ОНА{175МОЖЕТ ХОДИТЬ НА КЛЕТКИ 4,6,7,8,9. ЧЕРНАЯ ФИШКА МОЖЕТ ХОДИТЬ В{175ЛЮБОМ НАПРАВЛЕНИИ.{175  ЦЕЛЬ БЕЛЫХ - ЛИШИТЬ ЧЕРНУЮ ФИШКУ ВОЗМОЖНОСТИ ХОДИТЬ, ЗАГНАВ{175ЕЕ НА КЛЕТКИ 4,6 ИЛИ 10 И ОКРУЖИВ.{175  ЦЕЛЬ ЧЕРНЫХ - ЗАНЯТЬ КЛЕТКУ 0. ПОВТОРЕНИЕ ПОЗИЦИИ СЧИТАЕТСЯ{175     ');
-write('           ВЫИГРЫШЕМ ЧЕРНЫХ.{175{175  ПРИКАЗЫ ИГРЫ:{175N1-N2  - ВВОД ХОДА. ФИШКА ХОДИТ С КЛЕТКИ N1 НА КЛЕТКУ N2.{175СДАЮСЬ - ПОДАЕТСЯ ЕСЛИ ВИДНО, ЧТО ДАЛЬНЕЙШЕЕ СОПРОТИВЛЕНИЕ БЕСПОЛЕЗНО.{175КОНЕЦ  - ВЫХОД ИЗ ИГРЫ. ЭТОТ ПРИКАЗ МОЖНО ПОДАТЬ В ЛЮБОЙ МОМЕНТ.{175ПОЛЕ   - ЕСЛИ ИЗ-ЗА КАКИХ-ЛИБО НЕДОРАЗУМЕНИЙ ПОЛЕ НА ЭКРАНЕ ОКАЖЕТСЯ{175         ИСПОРЧЕННЫМ, ЭТИМ ПРИКАЗОМ ЕГО МОЖНО ВОССТАНОВИТЬ.{175ДА,НЕТ - ТАК СЛЕДУЕТ ОТВЕЧАТЬ НА ВОПРОСЫ.{175    ВСЕ ПРИКАЗЫ МОЖНО СОКРАЩАТЬ ДО ОДНОЙ БУКВЫ.{175');
+  P3442( gl388z, 1, arr);
+  (loop) _( 
+    l2v3z :=   extra71( gl388z );
+    _case l2v3z _of
+    0: _( sleep( (10C) ); _goto loop _);
+    3: _GOTO 11230
+    _end;
+  _);
+_); (* P4725 *)
+_(
+  checkPerm;
+  P3030(5);
+  l2v1z := (74C);
+  code(ЗЧ76421=ЗЧ76422,);
+  writeln('{175           =---> ПЕРЕД НАЧАЛОМ ИГРЫ СДЕЛАЙТЕ "ОFF LINЕ" <---={175');
+  _for l2v1z := (1C) _to (17C) _do _(
+    _for l2v2z := (1C) _to (14C) _do _(
+      write(' .  . ');
+    _);
+    writeln(' .  .');
+  _);
+  _for l2v2z := (1C) _to (14C) _do _(
+    arr[l2v2z] := (5002724050027240C);
+  _);
+  arr[13] := (5002724050027000C);
+  P4725;
+  _for l2v2z := (1C) _to (7C) _do _(
+    arr[l2v2z] := (4210421046304210C);
+  _);
+  arr[8] := (4210421042104000C);
+  P4725;
+  P3432( gl388z );
+  _GOTO 11230;
 _);
-
+_function rand(l2a1z: integer):integer;
+_var l2v1z:integer;
+_(
+  code(Э05310=,СД/1/=2ЗЧ5,);
+  rand := (l2v1z _MOD l2a1z);
+_);
+_procedure P5034;
+_var l2v1z, l2v2z, l2v3z, l2v4z, l2v5z, l2v6z, l2v7z: integer;
+arr:_array [1..100] _of integer;
+_(
+  gl391z[gl385z] := (0C);
+  l2v7z := (1C);
+  l2v6z := (0C);
+  _for l2v4z := (1C) _to gl385z _do _(
+    l2v1z := gl391z[l2v4z];
+    _for l2v5z := (1C) _to (6C) _do _(
+      code(2СЧ3=СД/-10/,2ЗЧ3=МР0,2ЗЧ5=,);
+      _if (l2v3z <> (128)) _then _(
+        _if (l2v6z = (6C)) _then _(
+          arr[l2v7z] := l2v2z;
+          l2v7z := (l2v7z + (1C));
+          l2v6z := (0C);
+        _);
+        code(2СЧ4=СД/-10/,2ЛС5=2ЗЧ4,); (* l2v2z := ((l2v2z << 8) | l2v3z); *)
+        l2v6z := (l2v6z + (1C));
+      _);
+    _);
+    _if (l2v4z = gl385z) _then
+      _for l2v6z := (l2v6z + (1C)) _to (6C) _do
+  (* code(2СЧ4=СД/-10/,2ЗЧ4=,); *) l2v2z := l2v2z * 256;
+      arr[l2v7z] := l2v2z;
+  _);
+  (* ... *)
+_);
 _procedure checkers;
+_procedure rules;
+_(
+    write('ПРАВИЛА ИГРЫ:{175{175 ПОЛЕ ДЛЯ ИГРЫ СОСТОИТ ИЗ 11 КЛЕТОК.{175 КЛЕТКИ ПОЛЯ ИМЕЮТ НОМЕРА ОТ 0 ДО 10.{175 В ИГРЕ ПРИНИМАЮТ УЧАСТИЕ ТРИ БЕЛЫЕ И ОДНА ЧЕРНАЯ ФИШКИ.{175 НАЧАЛЬНОЕ ПОЛОЖЕНИЕ ИЗОБРАЖЕНО НА РИСУНКЕ:{175');
+write('{175 БЕЛЫЕ НА КЛЕТКАХ 0,1,3, ЧЕРНАЯ НА КЛЕТКЕ 5. ВОЗМОЖНЫЕ НАПРАВЛЕНИЯ{175ДВИЖЕНИЯ ПОКАЗАНЫ ЧЕРТОЧКАМИ. БЕЛЫЕ ФИШКИ МОГУТ ХОДИТЬ ТОЛЬКО{175ВПЕРЕД И ВБОК. НАПРИМЕР, ЕСЛИ БЕЛАЯ ФИШКА СТОИТ НА ПОЛЕ 5, ОНА{175МОЖЕТ ХОДИТЬ НА КЛЕТКИ 4,6,7,8,9. ЧЕРНАЯ ФИШКА МОЖЕТ ХОДИТЬ В{175ЛЮБОМ НАПРАВЛЕНИИ.{175  ЦЕЛЬ БЕЛЫХ - ЛИШИТЬ ЧЕРНУЮ ФИШКУ ВОЗМОЖНОСТИ ХОДИТЬ, ЗАГНАВ{175ЕЕ НА КЛЕТКИ 4,6 ИЛИ 10 И ОКРУЖИВ.{175  ЦЕЛЬ ЧЕРНЫХ - ЗАНЯТЬ КЛЕТКУ 0. ПОВТОРЕНИЕ ПОЗИЦИИ СЧИТАЕТСЯ{175     ');
+  write('           ВЫИГРЫШЕМ ЧЕРНЫХ.{175{175  ПРИКАЗЫ ИГРЫ:{175N1-N2  - ВВОД ХОДА. ФИШКА ХОДИТ С КЛЕТКИ N1 НА КЛЕТКУ N2.{175СДАЮСЬ - ПОДАЕТСЯ ЕСЛИ ВИДНО, ЧТО ДАЛЬНЕЙШЕЕ СОПРОТИВЛЕНИЕ БЕСПОЛЕЗНО.{175КОНЕЦ  - ВЫХОД ИЗ ИГРЫ. ЭТОТ ПРИКАЗ МОЖНО ПОДАТЬ В ЛЮБОЙ МОМЕНТ.{175ПОЛЕ   - ЕСЛИ ИЗ-ЗА КАКИХ-ЛИБО НЕДОРАЗУМЕНИЙ ПОЛЕ НА ЭКРАНЕ ОКАЖЕТСЯ{175         ИСПОРЧЕННЫМ, ЭТИМ ПРИКАЗОМ ЕГО МОЖНО ВОССТАНОВИТЬ.{175ДА,НЕТ - ТАК СЛЕДУЕТ ОТВЕЧАТЬ НА ВОПРОСЫ.{175    ВСЕ ПРИКАЗЫ МОЖНО СОКРАЩАТЬ ДО ОДНОЙ БУКВЫ.{175');
+
+  _);
 _procedure myMove(l3a1z, l3a2z: integer);
 _(
  write('МОЙ ХОД ':10);
@@ -594,7 +672,7 @@ _(
  writeln(l3a2z);
 _);
 _( (* checkers *)
-mymove(0, 0);
+mymove(0, rand(1));
 _);
 _FUNСТI RАNDОМ:RЕАL;(* СЛУЧАЙНОЕ ЧИСЛО В (0,1) *)
 _(
@@ -652,7 +730,8 @@ inform;
 P2775;
 write(getDate, getTime, zeller(0,0,0)); printTenths(0); readZone(0,0);
   sleep(0);write(extra71(0));
-  P3432(0); P3442(0,0,0); landing(true);
+  P3432(0); landing(true);
+  tictactoe;
 11132:; 11136:; 11176:; 11204:; 11210:; 11214:; 11220:; 11227:; 11230:; 11244: ;
 writeln('НЕ ПОНИМАЮ');
 _).     
