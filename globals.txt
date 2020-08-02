@@ -1,0 +1,2 @@
+40	hardCopy
+84	tempfile
