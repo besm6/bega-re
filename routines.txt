@@ -24,7 +24,12 @@
 4751 tictactoe p
 5025 rand
 5034 P5034 p
+5516 rules
 5535 P5535 p
+5565 P5565 p
+5646 P5646 p
+5743 P5743 p
+5767 F5767 f
 6002 F6002 f
 6350 myMove p
 7402 checkers p

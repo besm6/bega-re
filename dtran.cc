@@ -253,9 +253,19 @@ uint find_code_offset() {
                 if (next_addr < total_len && (cinsn >> 20) == 0) {
                     todo.push_back(next_addr);
                     mklabel(next_addr);
+                } else if ((next_addr == cur || next_addr == cur+1) && (cinsn >> 20) != 0) {
+                    // This looks like a jump table.
+                    for(uint t = next_addr; t < total_len; ++t) {
+                        uint64_t entry = memory[t];
+                        if ((entry >> (24+15)) == 030) { // A jump
+                            todo.push_back(t);
+                        } else
+                            break;
+                    }
                 }
                 break;
-            } else if ((cinsn & 077600000) == 002600000) { // U1A, UZA, 0 reg
+            } else if ((cinsn & 077600000) == 002600000 // U1A, UZA, 0 reg
+                       || ((cinsn & 077700000) == 042600000)) { // 8,UZA - case stmt by branching with 8 as base
                 next_addr = cinsn & 077777;
                 if (next_addr < total_len) {
                     todo.push_back(next_addr);
