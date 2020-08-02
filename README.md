@@ -16,7 +16,7 @@ In the program there were also references to a few other games, implemented as o
 
 - "Lotto" (ЛОТО): A variant of [Yahtzee](https://en.wikipedia.org/wiki/Yahtzee).
 
-- "Glide path" (ГЛИССАДА): Reportedly an originally developed game imitating landing a plane allowing to control pitch, throttle and ailerons. ("The pilots has been poisoned by *a random selection of innocuous food, like boiled carrots*. The life of <N> passengers is in your hands...") It would draw the view of the landing strip in scale and perspective as ASCII graphics according to the distance and the altitude. No prototype has been found or suggested so far.
+- "Glide path" (ГЛИССАДА): Reportedly an originally developed game imitating landing a plane allowing to control pitch, throttle and ailerons. ("The pilots have been poisoned by *a random selection of innocuous food, like boiled carrots*. The life of *N* passengers is in your hands...") It would draw the view of the landing strip in scale and perspective as ASCII graphics according to the distance and the altitude. No prototype has been found or suggested so far.
 
 - "Cube" (КУБ): A Rubik's cube simulation. The program allowed to solve the cube by looking at the planar net or to experiment rotating it starting from the initial state. 
 
