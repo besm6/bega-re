@@ -240,7 +240,8 @@ uint find_code_offset() {
         for (uint i = 0; i < 2; ++i) {
             uint cinsn = insn[i];
             uint next_addr;
-            if ((cinsn & 03700000) == 03100000) { // VJM, any reg
+            uint opcode = (cinsn & 037) >> 15;
+            if (opcode == 031 || opcode == 034 || opcode == 035) { // VJM, VZM, V1M, any reg
                 next_addr = cinsn & 077777;
                 if (next_addr && next_addr < total_len) {
                     mklabel(next_addr);
@@ -248,7 +249,7 @@ uint find_code_offset() {
                 }
                 todo.push_back(cur+1);
                 break;
-            } else if ((cinsn & 03700000) == 03000000) { // UJ
+            } else if (opcode == 030) { // UJ
                 next_addr = cinsn & 077777;
                 if (next_addr < total_len && (cinsn >> 20) == 0) {
                     todo.push_back(next_addr);

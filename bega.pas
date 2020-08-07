@@ -19,6 +19,7 @@ n36 = 36;
 n45 = 45; n11 = 11; n102 = 102;n32 = 32; n76 = 76; n9 = 9;
 n47=47;n1023=1023; n6=6; n100=100; n2=2; n39=39; n4=4; n10=10;
 _type bits = _set _of 0..47; rec = _array[1..10] _of bits;
+zeroto9 = _array [0..9] _of integer;
 _var
 gl10z,
 gl11z:integer;
@@ -311,7 +312,7 @@ f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10,
 f11, f12, f13, f14, f15, f16, f17, f18, f19, f20: real
 _end;
 _var l2v1z: @arr; saved: arr; l2v23z, Vfps, temp, altitude, Vmps, mass: real;
-drymass, epsilon, l2v31z, l2v32z, usage, newalt, l2v35z, l2v36z, l2v37z, l2v38z, l2v39z, l2v40z, deltaT: real;
+drymass, lunarG, l2v31z, l2v32z, value, newalt, l2v35z, l2v36z, l2v37z, l2v38z, l2v39z, l2v40z, deltaT: real;
 interval, cursec, ruined, l2v45z, fuel, msgarg:integer; verbose: boolean;
 
 _procedure landMsg(msg: integer); _(
@@ -407,19 +408,19 @@ _procedure update;
 _(
  temp := temp + deltaT;
  l2v32z := l2v32z - deltaT;
- mass := mass - deltaT * usage;
+ mass := mass - deltaT * value;
  altitude := newalt;
  Vmps := l2v35z;
 _);
 _procedure P4250;
 _(
- l2v36z := deltaT * usage / mass;
- l2v35z := (((epsilon * deltaT) + Vmps) - (LN(1.0 + l2v36z) * l2v31z));
+ l2v36z := deltaT * value / mass;
+ l2v35z := (((lunarG * deltaT) + Vmps) - (LN(1.0 + l2v36z) * l2v31z));
  l2v37z := (l2v36z * l2v36z);
  l2v38z := (l2v37z * l2v36z);
  l2v39z := (l2v38z * l2v36z);
  l2v40z := (l2v39z * l2v36z);
-  newalt := (((altitude - (((epsilon * deltaT) * deltaT) / (2.0))) - (Vmps * deltaT)) + ((l2v31z * deltaT) * (((((l2v36z / (2.0)) + (l2v37z / (6.0))) + (l2v38z / (12.0))) + (l2v39z / (20.0))) + (l2v40z / (30.0)))));
+  newalt := (((altitude - (((lunarG * deltaT) * deltaT) / (2.0))) - (Vmps * deltaT)) + ((l2v31z * deltaT) * (((((l2v36z / (2.0)) + (l2v37z / (6.0))) + (l2v38z / (12.0))) + (l2v39z / (20.0))) + (l2v40z / (30.0)))));
   _);
 
 _procedure dead;
@@ -439,10 +440,10 @@ _( (* landing *)
   verbose := false;
   landMsg(8);
   _if eng _then BIND('WНАТ IS YOURS ? {172') _else BIND('ЧТО У ВАС ? {172');
-  getval(usage);
-  _if _not (trunc(usage) _IN [0..9]) _then usage := 9.0;
+  getval(value);
+  _if _not (trunc(value) _IN [0..9]) _then value := 9.0;
   landMsg(9);
-  fuel := round(15000 + usage * 500);
+  fuel := round(15000 + value * 500);
   msgarg := ;
   landMsg(10);
   l2v45z := 0;
@@ -458,7 +459,7 @@ _( (* landing *)
     Vmps := 1.0;
     mass := 32500;
     drymass := mass - fuel;
-    epsilon := 1.000000000001e-3;
+    lunarG := 1.000000000001e-3;
     l2v31z := 1.8;
     _if (l2v45z = 0) _then
       saved := l2v1z@
@@ -477,8 +478,8 @@ _( (* landing *)
         BIND('{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146FUEL RATE={172')
       _else
         BIND('{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146{146РАСХОД={172');
-      getval(usage);
-      _if ((usage < 8.0) _or (usage > 200)) _and (usage <> 0.0) _then _(
+      getval(value);
+      _if ((value < 8.0) _or (value > 200)) _and (value <> 0.0) _then _(
         landMsg(12);
         _goto rate;
       _)
@@ -490,8 +491,8 @@ _( (* landing *)
       (L4472) _if mass - drymass < 1.000000000001e-3 _then _( (* else 4617 *)
         msgarg := round(temp);
         landMsg(12);
-        deltaT := ((-(Vmps) + SQRT(((Vmps * Vmps) + ((2 * altitude) * epsilon)))) / epsilon);
-        Vmps := ((epsilon * deltaT) + Vmps);
+        deltaT := ((-(Vmps) + SQRT(((Vmps * Vmps) + ((2 * altitude) * lunarG)))) / lunarG);
+        Vmps := ((lunarG * deltaT) + Vmps);
         temp := (temp + deltaT);
   4514:
         msgarg := round(temp);
@@ -530,15 +531,15 @@ _( (* landing *)
         ending;
       _) _else _if (l2v32z < (1.000000000001e-3)) _then _exit L4472 _else _(
         deltaT := l2v32z;
-        _if ((((deltaT) * usage) + drymass) > mass) _then
-          deltaT := (((mass) - drymass) / usage);
+        _if ((((deltaT) * value) + drymass) > mass) _then
+          deltaT := (((mass) - drymass) / value);
         (* 4632 *)
         P4250;
         _if (newalt <= 0.0) _then
   4636: _(
           _if (deltaT < 5.0e-3) _then
             _goto 4514;
-          deltaT := ((2.0 * altitude) / (SQRT(((Vmps * Vmps) + ((2.0 * altitude) * (epsilon - (((l2v31z) * usage) / mass))))) + Vmps));
+          deltaT := ((2.0 * altitude) / (SQRT(((Vmps * Vmps) + ((2.0 * altitude) * (lunarG - (((l2v31z) * value) / mass))))) + Vmps));
           P4250;
           update;
           _goto 4636;
@@ -549,8 +550,8 @@ _( (* landing *)
           _goto L4472;
         _);
         _if (l2v35z < 0.0) _then (L4664) _(
-          Vfps := ((1.0 - ((mass * epsilon) / (l2v31z * usage))) / 2.0);
-          deltaT := (((mass * Vmps) / ((l2v31z * usage) * (SQRT(((Vfps * Vfps) + (Vmps / l2v31z))) + Vfps))) + 0.04999999999995);
+          Vfps := ((1.0 - ((mass * lunarG) / (l2v31z * value))) / 2.0);
+          deltaT := (((mass * Vmps) / ((l2v31z * value) * (SQRT(((Vfps * Vfps) + (Vmps / l2v31z))) + Vfps))) + 0.04999999999995);
           P4250;  
           _if (newalt <= 0.0) _then
             _goto 4636;
@@ -948,6 +949,68 @@ _);
 _function F5767:integer;
 _(
   F5767 := ((((pieces[1] * (303240C)) + (pieces[2] * (10000))) + (pieces[3] * (100))) + pieces[4]);
+_);
+_function F6002(l3a1z:_set _of 0..47; l3a2z: integer): integer;
+_var l3v1z, l3v2z, l3v3z, l3v4z: integer;
+_(
+  l3v1z := 0;
+  l3v3z := l3a2z * 4;
+  _for l3v2z := 0 _to 3 _do _(
+    _if ((l3v3z + l3v2z) _IN l3a1z) _then 
+      l3v4z := 1
+    _else
+      l3v4z := (0C);
+    l3v1z := l3v1z * 2 + l3v4z;
+  _);
+  F6002 := l3v1z;
+_);
+
+_function F6032(l3a1z: _set _of 0..47):integer;
+_(
+  F6032 := F6002(l3a1z, 0) * 100000 + F6002(l3a1z, 1) * 10000 +
+  F6002(l3a1z, 2) * 100 + F6002(l3a1z, 3);
+_);
+
+_procedure P6064(_var l3a1z:_set _of 0..47; l3a2z, l3a3z: integer);
+_var l3v1z, l3v2z:_set _of 0..47;
+l3v3z, l3v4z, l3v5z, l3v6z: integer;
+_(
+  l3v3z := ((l3a2z + (1C)) * (4C));
+  l3v2z := [l3v3z-4..l3v3z-1];
+  l3v1z := [];
+  l3v4z := l3a3z;
+  _for l3v5z := 1 _to 4 _do _(
+    l3v6z := l3v4z _MOD 2;
+    l3v4z := l3v4z _div 2;
+    _if (l3v6z = 1) _then
+      l3v1z := l3v1z + [l3v3z -l3v5z];
+  _);
+  l3a1z := l3a1z - l3v2z + l3v1z * l3v2z;
+  exit; (* aligning *)
+_);
+
+_function F6130(l3a1z: integer; l3a2z:integer):integer;
+_var l3v1z: integer; l3v2z: integer; l3v3z: integer;
+_(
+  l3v1z := (0C);
+  _for l3v3z := (1C) _to l3a1z _do _(
+  (* unclear, except the index range check [0..9] for l3a2z *)
+    (*=t+,p+*)l3v2z := l3a2z;(*=t-,p-*)
+    (q) _exit q;
+    (q) _exit q;
+    (q) _exit q;
+    (q) _exit q;
+    (q) _exit q;
+    (q) _exit q;
+    (q) _exit q;
+    (q) _exit q;
+    (q) _exit q;
+    (q) _exit q;
+    (q) _exit q;
+    (q) _exit q;
+    l3v1z := ((l3v1z * (12C)) + l3v2z);
+  _);
+  F6130 := l3v1z;
 _);
 
 _procedure myMove(l3a1z, l3a2z: integer);

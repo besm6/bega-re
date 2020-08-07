@@ -32,6 +32,8 @@
 5767 F5767 f
 6002 F6002 f
 6350 myMove p
+6064 P6064 p
+6130 F6130 f
 7402 checkers p
 7455 random f
 10230 races p
