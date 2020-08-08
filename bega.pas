@@ -43,7 +43,7 @@ gl390z:boolean; gl390a:integer; display: _array[1..100] _of alfa;
 _procedure filler; 
 _(
 
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
+ (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
@@ -869,6 +869,10 @@ N1-N2  - ВВОД ХОДА. ФИШКА ХОДИТ С КЛЕТКИ N1 НА КЛЕ
 _);
 
 _procedure checkers;
+_type pair = _record f1, f2: integer _end; 
+_var
+l2v1z, l2v2z:integer; l2v3z, l2v4z: integer; pairarray:_array [1..18] _of pair;
+
 _procedure P5535(l3a1z: char; l3a2z:integer);
 _var l3v1z: _array [1..6] _of char; l3v7z: integer;
 _(
@@ -985,8 +989,7 @@ _(
     _if (l3v6z = 1) _then
       l3v1z := l3v1z + [l3v3z -l3v5z];
   _);
-  l3a1z := l3a1z - l3v2z + l3v1z * l3v2z;
-  exit; (* aligning *)
+  l3a1z := (l3a1z - l3v2z * [0..47]) + l3v1z * l3v2z;
 _);
 
 _function F6130(l3a1z: integer; l3a2z:integer):integer;
@@ -1012,13 +1015,99 @@ _(
   _);
   F6130 := l3v1z;
 _);
+_procedure P6165;
+_(
+
+  pairarray[1].f1 := (0C);
+  pairarray[1].f2 := (2C);
+  pairarray[2].f1 := (0C);
+  pairarray[2].f2 := (3C);
+  pairarray[3].f1 := (1C);
+  pairarray[3].f2 := (5C);
+  pairarray[4].f1 := (1C);
+  pairarray[4].f2 := (6C);
+  pairarray[5].f1 := (2C);
+  pairarray[5].f2 := (1C);
+  pairarray[6].f1 := (2C);
+  pairarray[6].f2 := (5C);
+  pairarray[7].f1 := (3C);
+  pairarray[7].f2 := (2C);
+  pairarray[8].f1 := (3C);
+  pairarray[8].f2 := (5C);
+  pairarray[9].f1 := (4C);
+  pairarray[9].f2 := (11C);
+  pairarray[10].f1 := (5C);
+  pairarray[10].f2 := (4C);
+  pairarray[11].f1 := (5C);
+  pairarray[11].f2 := (7C);
+  pairarray[12].f1 := (5C);
+  pairarray[12].f2 := (10C);
+  pairarray[13].f1 := (5C);
+  pairarray[13].f2 := (11C);
+  pairarray[14].f1 := (6C);
+  pairarray[14].f2 := (5C);
+  pairarray[15].f1 := (7C);
+  pairarray[15].f2 := (12C);
+  pairarray[16].f1 := (10C);
+  pairarray[16].f2 := (7C);
+  pairarray[17].f1 := (10C);
+  pairarray[17].f2 := (12C);
+  pairarray[18].f1 := (11C);
+  pairarray[18].f2 := (10C);
+_);
+
+_function F6233(l3a1z, l3a2z:integer; l3a3z:boolean):boolean;
+_var l3v1z:integer;
+_(
+  _if (l3a1z > (12C)) _or (l3a2z > (12C)) _or (l3a1z < (0C)) _or (l3a2z < (0C)) 
+    _or ((field[l3a1z] = 2) _and l3a3z) _or ((field[l3a1z] = 1) _and _not l3a3z)
+    _or (field[l3a2z] <> 0) _or (field[l3a1z] = 0) _then _(
+    F6233 := false;
+    exit
+  _);
+  _for l3v1z := (1C) _to (22C) _do _(
+    _if _not ((pairar[l3v1z].f1 <> l3a1z) _or (pairar[l3v1z].f2 <> l3a2z)) _or
+      (_not (((pairar[l3v1z].f2 <> l3a1z) _or (pairar[l3v1z].f1 <> l3a2z))) _and l3a3z) _then _(
+      F6233 := true;
+      exit;
+    _)
+  _);
+  _if (((l3a1z - (1C)) = l3a2z) _and  l3a3z) _or ((l3a1z + (1C)) = l3a2z) _then
+    F6233 := true
+  _else
+    F6233 := false;
+_);
+
+_procedure P6327(l3a1z, l3a2z: integer);
+_var l3v1z:integer;
+_(
+  field[l3a2z] := field[l3a1z];
+  field[l3a1z] := (0C);
+  _for l3v1z := (1C) _to (4C) _do _(
+    _if (pieces[l3v1z] = l3a1z) _then
+      pieces[l3v1z] := l3a2z;
+  _);
+_);
 
 _procedure myMove(l3a1z, l3a2z: integer);
 _(
- write('МОЙ ХОД ':10);
- write(l3a1z);
- write(' - ');
- writeln(l3a2z);
+  write('МОЙ ХОД ':10);
+  write(l3a1z:1);
+  write(' - ');
+  writeln(l3a2z:1);
+_);
+
+
+_procedure P6367(_var l3a1z: integer);
+_(
+  _case l3a1z _of
+  1:l3a1z := 3;
+  3:l3a1z := 1;
+  4:l3a1z := 6;
+  6:l3a1z := 4;
+  7:l3a1z := 9;
+  9:l3a1z := 7
+_end;
 _);
 _( (* checkers *)
   rules; mymove(f5767, rand(1));
