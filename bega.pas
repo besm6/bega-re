@@ -43,8 +43,7 @@ gl390z:boolean; gl390a:integer; display: _array[1..100] _of alfa;
 _procedure filler; 
 _(
 
- (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
+(q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
@@ -869,9 +868,10 @@ N1-N2  - ВВОД ХОДА. ФИШКА ХОДИТ С КЛЕТКИ N1 НА КЛЕ
 _);
 
 _procedure checkers;
-_type pair = _record f1, f2: integer _end; 
+_label 7452;
+_type pair = _record f1, f2: integer _end; arbits = _array [1..10] _of bits;
 _var
-l2v1z, l2v2z:integer; l2v3z, l2v4z: integer; pairarray:_array [1..18] _of pair;
+l2v1z:@arbits; l2v2z, l2v3z:integer;  l2v4z: char; pairarray:_array [1..18] _of pair;
 
 _procedure P5535(l3a1z: char; l3a2z:integer);
 _var l3v1z: _array [1..6] _of char; l3v7z: integer;
@@ -992,29 +992,28 @@ _(
   l3a1z := (l3a1z - l3v2z * [0..47]) + l3v1z * l3v2z;
 _);
 
-_function F6130(l3a1z: integer; l3a2z:integer):integer;
-_var l3v1z: integer; l3v2z: integer; l3v3z: integer;
+_function F6130(l3a1z: integer; _var l3a2z:text):integer;
+_var l3v1z: integer;  l3v2z: char; l3v3z: integer;
 _(
   l3v1z := (0C);
   _for l3v3z := (1C) _to l3a1z _do _(
-  (* unclear, except the index range check [0..9] for l3a2z *)
-    (*=t+,p+*)l3v2z := l3a2z;(*=t-,p-*)
+    (* a more efficient implementation of range checking requires alignment *)
     (q) _exit q;
     (q) _exit q;
     (q) _exit q;
     (q) _exit q;
+    _if ord(l3a2z@) > ord('9') _then _(
+      F6130 := l3v1z;
+      exit;
     (q) _exit q;
     (q) _exit q;
-    (q) _exit q;
-    (q) _exit q;
-    (q) _exit q;
-    (q) _exit q;
-    (q) _exit q;
-    (q) _exit q;
-    l3v1z := ((l3v1z * (12C)) + l3v2z);
+    _);
+    l3v2z := l3a2z@;
+    get(l3a2z);
+    l3v1z := ((l3v1z * (12C)) + ord(l3v2z));
   _);
   F6130 := l3v1z;
-_);
+_); 
 _procedure P6165;
 _(
 
@@ -1109,7 +1108,152 @@ _(
   9:l3a1z := 7
 _end;
 _);
+
+_procedure P6420(_var l3a1z, l3a2z, l3a3z: integer);
+_var l3v1z, l3v2z, l3v3z, l3v4z, l3v5z, l3v6z, l3v7z, l3v8z: integer;
+l3v8arr:_array[1..4] _of integer;
+_(
+  _for l3v5z := (1C) _to (4C) _do _(;
+    l3v8arr[l3v5z] := pieces[l3v5z];
+  _);
+  _for l3v3z := (1C) _to (2C) _do _(;
+    l3v2z := F5767;
+    l3v4z := (1C);
+    l3v8z := (101C);
+    _repeat _(
+      l3v6z := trunc((l3v4z + l3v8z) / 2);
+      l3v7z :=   F6032(l2v1z@[l3v6z] );
+      _if (l3v7z = l3v2z) _then _(
+        l3v1z := (rand( (3C)) * (2C));
+        l3a1z :=   F6002( l2v1z@[l3v6z], (l3v1z + (4C)) );
+        l3a2z :=   F6002( l2v1z@[l3v6z], (l3v1z + (5C)) );
+        l3a3z :=   F6002( l2v1z@[l3v6z], (12C) );
+        _for l3v5z := (1C) _to (4C) _do _(;
+          pieces[l3v5z] := l3v8arr[l3v5z];
+        _);
+        _if (l3v3z = (2C)) _then _(
+          P6367( l3a1z );
+          P6367( l3a2z );
+        _);
+        exit
+      _)  _else _(
+        _if (l3v7z < l3v2z) _then 
+          l3v4z := (l3v6z + (1C))
+        _else
+          l3v8z := (l3v6z - (1C));
+      _);
+    _) _until (l3v4z > l3v8z);
+    _for l3v5z := (1C) _to (4C) _do _(;
+      P6367( pieces[l3v5z] );
+    _);
+    P5743;
+  _);
+_);
+
+_procedure P6551(_var l3a1z, l3a2z:integer; _var l3a3z:char; _var l3a4z:boolean);
+_var l3v1z:integer;
+_(
+  _for l3v1z := (1C) _to (5C) _do _(;
+    (L6561) _(
+      TTIN( (2C) );
+      _if (tempfile@ <> chr(57C)) _then _exit L6561;
+      P5272( (0C) );
+      _goto L6561;
+    _);
+    _if (tempfile@ = chr(52C)) _then _GOTO 7452;
+  _if ord(tempfile@) <= ord('9') _then _(
+    l3a1z :=   F6130( (12C), tempfile );
+    _if (tempfile@ = chr(13C)) _then (a) _(
+      code(16ПВ76312=,);
+      _if (ord(tempfile@) <= ord('9')) _then _(
+        l3a2z := F6130( (12C), tempfile );
+        l3a4z := true;
+        exit;
+      _) _else
+        P5131( (11C) );
+    _) _else _(
+      P5131( (11C) );
+    _);
+  _) _else _(
+    _if (ord(tempfile@) >= ord('A')) _and (ord(tempfile@) <= ord('M')) _then _(
+      l3a3z := tempfile@;
+      l3a4z := false;
+      exit;
+    _) _else _(
+  (*
+ L6643:,BSS,;
+ R13 := &3494;
+ L6141( tempfile@.f[0] );
+ ,UJ,L6650;
+ L6646:,BSS,;
+ R13 := &3497;
+ L6630( tempfile@.f[0] );
+ L6650:,BSS,;
+ ,UJ,L6654;
+ L6651:,BSS,;
+ L5131( (11C) );
+ ,UJ,L6654;
+ L6654:,BSS,;
+*)
+    _)
+  _)
+ _);
+ (* L6656 *)
+ _GOTO 7452;
+_);
+
+_procedure P6732(_var c: char);
+_var l3v1z, l3v2z, l3v3z:integer; l3v4z:boolean; l3v5z:char;
+_(
+  _for l3v3z := (1C) _to (5C) _do _(
+    P6551(l3v1z, l3v2z, l3v5z, l3v4z);
+    _if (l3v4z _and (l3v5z = 'Д')) _or
+        (_not l3v4z _and (l3v5z = 'H')) _then _(
+      c := l3v5z;
+      exit;
+    _) _else 
+      P5131( (12C) );
+  _);
+  _GOTO 7452;
+_);
+
+_procedure P6765;
+_(
+  _);
+
+_procedure P7272;
+_(
+  _);
+
 _( (* checkers *)
+  checkPerm;
+  readZone( (0C), (400137C) );
+  l2v1z := ptr(64000C);
+  l2v2z := (64101C);
+  P6165;
+  gl385z := (1C);
+  P5252;
+  P5131( (1C) );
+  P6732(l2v4z);
+  _if (l2v4z = 'Д') _then
+    rules;
+  gl390z := true;
+  gl10z := (698);
+  code(ЗЧ76421=ЗЧ76422,);
+  _repeat 
+    P5131( (5C) );
+    P6732(l2v4z);
+    _if (l2v4z = 'Д') _then 
+      P7272
+    _else
+      P6765;
+    P3030( (4C) );
+    P5131( (6C) );
+    P6732(l2v4z);
+  _until (l2v4z = 'H');
+  l2v3z := gl387z;
+  code(ЗЧ76421=ЗЧ76422,);
+  7452:
   rules; mymove(f5767, rand(1));
   P5272(0); P5646(0,0,false,'0'); P5535(' ', 1);P5743;
 _);
@@ -1125,7 +1269,11 @@ _РRОСЕD RАND0;(* НАЧАЛЬНАЯ УСТАНОВКА RАNDОМ *)
 _(СОDЕ(К;Э05310=,СД/-31/=ЗЧХRАND,Э050114=,
 СД/-5/=ЦСХRАND,ЛУЕВПИЛ=ЛСЕСОРВ,ЗЧХRАND=,)_);(*ЕND RАND0*)
 
-
+_procedure races;
+_(
+  writeln('НЕРВНЫМ НА БЕГА ХОДИТЬ ВРЕДНО !');
+  write(tempfile,'КОН  _377');
+  _);
 _procedure inform;
 _var l2v1z:alfa;
 _procedure load(_var l3a1z: alfa); 

@@ -34,7 +34,12 @@
 6350 myMove p
 6064 P6064 p
 6130 F6130 f
+6233 F6233 f
 7402 checkers p
+6327 P6327 p
+6367 P6367 p
+6420 P6420 p
+6551 P6551 p
 7455 random f
 10230 races p
 10710 load
