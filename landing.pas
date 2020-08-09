@@ -9,37 +9,37 @@ interval, cursec, ruined, fuel, msgarg:integer; verbose: boolean;
 
 _procedure landMsg(msg: integer); _(
 _if eng _then _case msg _of
-0: write('I UNDЕRSТООD IТ АS NIL.');
-1: write('МISSIОN СОNТRОL ОUТ.');
-2: write('УОU ВLЕW IТ АGАIN. WЕLL, ТНIRD ТIМЕS ТНЕ СНАRМ.....');
-3: write('НОW DОЕS IТ FЕЕL ТО ТАSТЕ DЕАТН ТRЕЕ ТIМЕS....??');
-4: write('NЕХТ ТIМЕ ВRING АLОNG УОUR ВIВLЕ.');
-5: write('DО NОТ АРРLУ ТО NАSА FОR А JОВ. УОU''LL NЕVЕR МАКЕ IТ.');
-6: write('УОU''VЕ RUINЕD SIХ МISSIОNS NОW. ТURN IN УОUR SРАСЕSUIТ.');
-7: write('.......SРLАТ.  NОТ SО GООD.  INЕХРЕRIЕNСЕ РЕRНАРS.');
-8: _( write('МISSIОN СОNТRОL САLLING LUNАR МОDULЕ:
-МАNUАL СОNТRОL IS NЕСЕSSАRУ FОR LАNDING.
-WНАТ IS УОUR ЕХРЕRIЕNСЕ:
- 0 1 2(SТАNDАRD) 3 4 5 6 7 8 9(NО ЕХРЕRIЕNСЕ) ?') _);
-9: write('УОU МUSТ SРЕСIFУ А FUЕL RАТЕ ЕАСН 10 SЕСОNDS.
-RАТЕS МUSТ ВЕ ZЕRО ОR ВЕТWЕЕN 8 АND 200 LВS.РЕR SЕС.');
-10: write('УОU НАVЕ ', msgarg:0, ' LВS ОF FUЕL.
-САРSULЕ WЕIGНТ IS NОW 32500 LВS INСLUDING FUЕL.
-СОММЕNСЕ LАNDING РRОСЕD.');
-11: write('FIRSТ RАDАR СНЕСК СОМING UР:
- ТIМЕ(SЕС) АLТ(МILЕS + FЕЕТ) VЕLОСIТУ(FРS) FUЕL(LВS)');
-12: write('DОN''Т WАSТЕ ТIМЕ ТRУING ТО ВURN АТ ТНАТ RАТЕ.');
-13: write('FUЕL ОUТ АТ ', msgarg:0, ' SЕСОNDS.');
-14: write('ОN ТНЕ МООN АТ ', msgarg:0,  ' SЕСОNDS.');
-15: write('IМРАСТ VЕLОСIТУ ОF ', msgarg:0, ' F.Р.S.');
-16: write('FUЕL LЕFТ ', msgarg:0, ' LВS.');
-17: write('РЕRFЕСТ LАNDING. УОU LUСКУ JЕТ JОСКЕУ.');
-18: write('А GООD LАNDING, NОТ GRЕАТ, JUSТ GООD.');
-19: write('ВUСК RОGЕRS УОUR NОТ, ВUТ СОNGRАТULАТIОNS, УОU''RЕ DОWN.');
-20: write('НЕАVУ СRАFТ DАМАGЕ, УОU МАУ NЕVЕR SЕЕ ЕАRТН АGАIN.');
-21: write('ТНЕRЕ''S NОW А NЕW LUNАR СRАТЕR ', msgarg:0, ' FЕЕТ DЕЕР.');
-22: write('РЕRFЕСТ RЕСОRD. NО FАIR USING САLСULАТING АIDS.');
-23: write('NАSА WILL DЕDUСТ  ', msgarg:0, ' $ FRОМ УОUR РАУСНЕСК ЕАСН WЕЕК');
+0: write('I UNDЕRSТООD IТ AS NIL.');
+1: write('МISSIОN CОNТRОL ОUТ.');
+2: write('УОU BLЕW IТ AGAIN. WЕLL, ТНIRD ТIМЕS ТНЕ CНARМ.....');
+3: write('НОW DОЕS IТ FЕЕL ТО ТASТЕ DЕAТН ТRЕЕ ТIМЕS....??');
+4: write('NЕХТ ТIМЕ BRING ALОNG УОUR BIBLЕ.');
+5: write('DО NОТ AРРLУ ТО NASA FОR A JОB. УОU''LL NЕVЕR МAКЕ IТ.');
+6: write('УОU''VЕ RUINЕD SIХ МISSIОNS NОW. ТURN IN УОUR SРACЕSUIТ.');
+7: write('.......SРLAТ.  NОТ SО GООD.  INЕХРЕRIЕNCЕ РЕRНAРS.');
+8: _( write('МISSIОN CОNТRОL CALLING LUNAR МОDULЕ:
+МANUAL CОNТRОL IS NЕCЕSSARУ FОR LANDING.
+WНAТ IS УОUR ЕХРЕRIЕNCЕ:
+ 0 1 2(SТANDARD) 3 4 5 6 7 8 9(NО ЕХРЕRIЕNCЕ) ?') _);
+9: write('УОU МUSТ SРЕCIFУ A FUЕL RAТЕ ЕACН 10 SЕCОNDS.
+RAТЕS МUSТ BЕ ZЕRО ОR BЕТWЕЕN 8 AND 200 LBS.РЕR SЕC.');
+10: write('УОU НAVЕ ', msgarg:0, ' LBS ОF FUЕL.
+CAРSULЕ WЕIGНТ IS NОW 32500 LBS INCLUDING FUЕL.
+CОММЕNCЕ LANDING РRОCЕD.');
+11: write('FIRSТ RADAR CНЕCК CОМING UР:
+ ТIМЕ(SЕC) ALТ(МILЕS + FЕЕТ) VЕLОCIТУ(FРS) FUЕL(LBS)');
+12: write('DОN''Т WASТЕ ТIМЕ ТRУING ТО BURN AТ ТНAТ RAТЕ.');
+13: write('FUЕL ОUТ AТ ', msgarg:0, ' SЕCОNDS.');
+14: write('ОN ТНЕ МООN AТ ', msgarg:0,  ' SЕCОNDS.');
+15: write('IМРACТ VЕLОCIТУ ОF ', msgarg:0, ' F.Р.S.');
+16: write('FUЕL LЕFТ ', msgarg:0, ' LBS.');
+17: write('РЕRFЕCТ LANDING. УОU LUCКУ JЕТ JОCКЕУ.');
+18: write('A GООD LANDING, NОТ GRЕAТ, JUSТ GООD.');
+19: write('BUCК RОGЕRS УОUR NОТ, BUТ CОNGRAТULAТIОNS, УОU''RЕ DОWN.');
+20: write('НЕAVУ CRAFТ DAМAGЕ, УОU МAУ NЕVЕR SЕЕ ЕARТН AGAIN.');
+21: write('ТНЕRЕ''S NОW A NЕW LUNAR CRAТЕR ', msgarg:0, ' FЕЕТ DЕЕР.');
+22: write('РЕRFЕCТ RЕCОRD. NО FAIR USING CALCULAТING AIDS.');
+23: write('NASA WILL DЕDUCТ  ', msgarg:0, ' $ FRОМ УОUR РAУCНЕCК ЕACН WЕЕК');
 24: write('FОR ТНЕ L.Е.М. УОU WIРЕD ОUТ.');
 25: write('FОR ТНЕ ', msgarg:0, ' L.Е.М.''S УОU WIРЕD ОUТ.')
 _end _else _case msg _of
