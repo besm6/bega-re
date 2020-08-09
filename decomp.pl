@@ -259,7 +259,8 @@ $prog =~ s@,AOX,C/0022;([^;]+);,YTA,\(31C\)@\1@g;
 $prog =~ s@,AOX,C/0022;(,NTR,3;)?([^;]+);14,VJM,P/0060@\2@g;
 $prog =~ s@\(74000C\)@NIL@g;
 
-
+# Handle multiplication for indexing
+$prog =~ s@,A\*X,\(6400000000(\d+)C\);,YTA,\(255\)@,A*X,(\1)@g;
 if (open(LOCALS, "locals.txt")) {
     while (<LOCALS>) {
         chop;
@@ -324,6 +325,7 @@ $prog =~ s@12,VJM,P/7A *@writeString@g;
 $prog =~ s@14,VJM,P/WI *@CALL writeInt@g;
 $prog =~ s@14,VJM,P/WL *@writeLN@g;
 $prog =~ s@14,VJM,P/CW *@writeChar@g;
+$prog =~ s@14,VJM,P/SS *@CALL P/SS@g;
 $prog =~ s@14,VJM,P/WC *@CALL writeCharWide@g;
 $prog =~ s@14,VJM,P/0026 *@get(input)@g;
 $prog =~ s@14,VJM,P/0030 *@put(output)@g;
@@ -333,6 +335,7 @@ $prog =~ s@14,VJM,P/0041 *@CALL get@g;
 $prog =~ s@14,VJM,P/0042 *@CALL reset@g;
 $prog =~ s@14,VJM,P/0064 *@CALL rewrite@g;
 $prog =~ s@14,VJM,P/0105 *@CALL writeReal@g;
+$prog =~ s@14,VJM,P/0112 *@CALL P/PI@g;
 $prog =~ s@14,VJM,P/WOLN *@writeLN@g;
 
 $prog =~ s@12,VTM,([^;]+);14,VJM,P/EO *@eof(\1)@g;
@@ -641,13 +644,13 @@ while ($from <= $#ops) {
         ++$from;
         next;
     } elsif (@stack && $line =~/^ifgoto (.*)/) {
-        push @to, "if $stack[$#stack] goto $1";
+        push @to, "_if $stack[$#stack] _then goto $1";
         # If there was just one element on the stack, consider it consumed
         @stack = (); #  if @stack == 1;
         ++$from;
         next;
     } elsif (@stack && $line =~/^ifnot (.*)/) {
-        push @to, "if $stack[$#stack] then below else goto $1";
+        push @to, "_if $stack[$#stack] _then below _else goto $1";
         # If there was just one element on the stack, consider it consumed
         @stack = (); # if @stack == 1;
         ++$from;
@@ -818,8 +821,8 @@ $prog =~ s/ +\) +/) /g;
 
 while ($prog =~
 #   var1   := start2   loop3               cond4  end5            exit6 body7
- s@([^;]+) := ([^;]+);L(\d+):,BSS,;if \(\1 ([<>]) ([^;]+)\) goto L(\d+);(.*);\1 := .\1 [-+] .1C..;,UJ,L\3;L\6@
-       "for $1 := $2 ". ($4 eq '>' ? 'to ' : 'downto ') . "$5 do {;$7;};L$6"@ge) { }
+ s@([^;]+) := ([^;]+);L(\d+):,BSS,;_if \(\1 ([<>]) ([^;]+)\) _then goto L(\d+);(.*);\1 := .\1 [-+] .1C..;,UJ,L\3;L\6@
+       "_for $1 := $2 ". ($4 eq '>' ? '_to ' : '_downto ') . "$5 _do _(;$7;_);L$6"@ge) { }
 
        
 sub getstring {

@@ -43,7 +43,6 @@ gl390z:boolean; gl390a:integer; display: _array[1..100] _of alfa;
 _procedure filler; 
 _(
 
-(q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
@@ -839,7 +838,7 @@ _(
   P2775;
   sleep( (125C) );
   gl390z := false;
-  P5272( (0C) );
+  P5272(0);
   sleep( (55C) );
   write('
  БЕЛЫЕ НА КЛЕТКАХ 0,1,3, ЧЕРНАЯ НА КЛЕТКЕ 5. ВОЗМОЖНЫЕ НАПРАВЛЕНИЯ
@@ -868,10 +867,10 @@ N1-N2  - ВВОД ХОДА. ФИШКА ХОДИТ С КЛЕТКИ N1 НА КЛЕ
 _);
 
 _procedure checkers;
-_label 7452;
+_label 1, 7452;
 _type pair = _record f1, f2: integer _end; arbits = _array [1..10] _of bits;
 _var
-l2v1z:@arbits; l2v2z, l2v3z:integer;  l2v4z: char; pairarray:_array [1..18] _of pair;
+l2v1z, l2v2z:@arbits; l2v3z:integer;  l2v4z: char; pairarray:_array [1..18] _of pair;
 
 _procedure P5535(l3a1z: char; l3a2z:integer);
 _var l3v1z: _array [1..6] _of char; l3v7z: integer;
@@ -1071,10 +1070,11 @@ _(
       exit;
     _)
   _);
-  _if (((l3a1z - (1C)) = l3a2z) _and  l3a3z) _or ((l3a1z + (1C)) = l3a2z) _then
-    F6233 := true
-  _else
-    F6233 := false;
+  _if (((l3a1z - (1C)) = l3a2z) _and  l3a3z) _or ((l3a1z + (1C)) = l3a2z) _then _(
+    F6233 := true;
+    exit
+  _);
+  F6233 := false;
 _);
 
 _procedure P6327(l3a1z, l3a2z: integer);
@@ -1157,49 +1157,58 @@ _(
     (L6561) _(
       TTIN( (2C) );
       _if (tempfile@ <> chr(57C)) _then _exit L6561;
-      P5272( (0C) );
+      P5272(0);
       _goto L6561;
     _);
     _if (tempfile@ = chr(52C)) _then _GOTO 7452;
-  _if ord(tempfile@) <= ord('9') _then _(
-    l3a1z :=   F6130( (12C), tempfile );
-    _if (tempfile@ = chr(13C)) _then (a) _(
-      code(16ПВ76312=,);
-      _if (ord(tempfile@) <= ord('9')) _then _(
-        l3a2z := F6130( (12C), tempfile );
-        l3a4z := true;
-        exit;
-      _) _else
-        P5131( (11C) );
-    _) _else _(
-      P5131( (11C) );
-    _);
-  _) _else _(
-    _if (ord(tempfile@) >= ord('A')) _and (ord(tempfile@) <= ord('M')) _then _(
+    _if ord(tempfile@) <= ord('9') _then _(
+      l3a1z :=   F6130( (12C), tempfile );
+      _if (tempfile@ = chr(13C)) _then (a) _(
+        code(16ПВ76312=,);
+        _if (ord(tempfile@) <= ord('9')) _then _(
+          l3a2z := F6130( (12C), tempfile );
+          l3a4z := true;
+          exit;
+        _) _else
+          P5131(9);
+      _) _else _(
+        P5131(9);
+      _);
+    _) _else _if ((ord(tempfile@) >= ord('A')) _and (ord(tempfile@) <= ord('M'))) _then _(
       l3a3z := tempfile@;
       l3a4z := false;
       exit;
-    _) _else _(
-  (*
- L6643:,BSS,;
- R13 := &3494;
- L6141( tempfile@.f[0] );
- ,UJ,L6650;
- L6646:,BSS,;
- R13 := &3497;
- L6630( tempfile@.f[0] );
- L6650:,BSS,;
- ,UJ,L6654;
- L6651:,BSS,;
- L5131( (11C) );
- ,UJ,L6654;
- L6654:,BSS,;
-*)
+    _) _else _if true (* not (tempfile@ _in ['0'..'9','A'..'M']) *) _then _(
+      (q) _exit q;   (q) _exit q;   (q) _exit q;   (q) _exit q;  (q) _exit q;
+      (q) _exit q;   (q) _exit q;   (q) _exit q;   (q) _exit q;
+      P5131(9);
+      (q) _exit q;
+    _); 
+  _);
+  (* L6656 *)
+  _GOTO 7452;
+_);
+
+_procedure P6660(_var l3a1z, l3a2z: integer; _var l3a3z: integer);
+_var l3v1z: integer; l3v2z: char; l3v3z:boolean;
+_(
+  l3a3z := 0;
+  _for l3v1z := (1C) _to (5C) _do _(;
+    P6551( l3a1z, l3a2z, l3v2z, l3v3z);
+    _if _not l3v3z _and (l3v2z = chr(61C)) _then _(
+      l3a3z := 1;
+      exit
+    _) _else _if _not l3v3z _and (l3v2z <> chr(61C)) _then _(
+      P5131( (14C) );
+    _) _else _if l3v3z _and F6233( l3a1z, l3a2z, gl389z) _then _(
+      l3a3z := 0;
+      exit
+    _) _else (q) _(
+      P5131( (13C) );
+      _exit q
     _)
-  _)
- _);
- (* L6656 *)
- _GOTO 7452;
+  _);
+  _GOTO 7452;
 _);
 
 _procedure P6732(_var c: char);
@@ -1207,29 +1216,150 @@ _var l3v1z, l3v2z, l3v3z:integer; l3v4z:boolean; l3v5z:char;
 _(
   _for l3v3z := (1C) _to (5C) _do _(
     P6551(l3v1z, l3v2z, l3v5z, l3v4z);
-    _if (l3v4z _and (l3v5z = 'Д')) _or
+    _if (_not l3v4z _and (l3v5z = 'Д')) _or
         (_not l3v4z _and (l3v5z = 'H')) _then _(
       c := l3v5z;
       exit;
-    _) _else 
-      P5131( (12C) );
+    _);
+    P5131( (12C) );
   _);
   _GOTO 7452;
 _);
 
 _procedure P6765;
+_var l3v1z:integer; l3v2z:integer; l3v3z: integer; 
 _(
+  P5252;
+  P5272(0);
+  gl389z := true;
+  (L6773) _(
+    P6420(l3v1z, l3v2z, l3v3z);
+    P5646( l3v1z, l3v2z, true, chr(226) );
+    myMove( l3v1z, l3v2z );
+    P6327( l3v1z, l3v2z );
+    P5743;
+    _if (l3v3z = (13C)) _then _(
+      P5131( (7C) );
+      exit
+    _);
+    P5131( (3C) );
+    P6660(l3v1z, l3v2z, l3v3z);
+    _if l3v3z = 1 _then _(
+      P5131( (7C) );
+      exit
+    _);
+    P5646( l3v1z, l3v2z, false, chr(126) );
+    P6327( l3v1z, l3v2z );
+    P5743;
+    _goto L6773;
+  _)
+_);
+
+_procedure P7047(_var l3a1z, l3a2z:integer; _var l3a3z:_array [0..9] _of integer);
+_var l3v1z, l3v2z, l3v3z, l3v4z, l3v5z, l3v6z, l3v7z, l3v8z: integer;
+_(
+  _for l3v5z := (1C) _to (4C) _do _(;
+    (* l3a3z[l3v5z] := pieces[l3v5z]; *)
+    code(3ИК12=1СЧ561,3ИК12=3ЗЧ5,);
   _);
+  l3a1z := pieces[4];
+  _for l3v6z := (1C) _to (2C) _do _(;
+    l3v7z :=   F5767;
+    _if (l3v7z = 23735C) _then _(
+      _case rand(6) _of
+      0: l3a2z := (3C);
+      1: l3a2z := (4C);
+      2: l3a2z := (6C);
+      3: l3a2z := (7C);
+      4: l3a2z := (10C);
+      5: l3a2z := (11C)
+      _end;
+      _if (l3v6z = (2C)) _then _(
+        P6367( l3a2z );
+        _for l3v5z := (1C) _to (4C) _do _(;
+          (* pieces[l3v5z] := l3a3z[l3v5z]; *)
+          code(3ИК12=3СЧ5,3ИК12=1ЗЧ561,);
+        _);
+      _);
+      exit
+    _);
+    (* 7136 *)
+    l3v8z := F5767 _MOD 698 + 1;
+   _repeat 
+    _if (F6032(l2v2z@[l3v8z]) = l3v7z) _then _(
+      l3a2z := F6002(l2v2z@[l3v8z], rand(3) + 4);
+      _if (l3v6z = (2C)) _then _(
+        _for l3v5z := (1C) _to (4C) _do _(;
+          (* pieces[l3v5z] := l3a3z[l3v5z]; *)
+          code(3ИК12=3СЧ5,3ИК12=1ЗЧ561,);  
+        _);
+        P6367( l3a2z );
+      _);
+      _if (F6002(l2v2z@[l3v8z], (7C)) = (2C)) _then _(
+        l3a3z[0] := (13C);
+      _);
+      _if (l3a2z = (14C)) _then _(
+        l3a3z[0] := (14C);
+      _);
+      P6064(l2v2z@[l3v8z], 7, F6002(l2v2z@[l3v8z], (7C)) + (1C));
+      exit
+    _) _else _(
+      l3v8z := F6002( l2v2z@[l3v8z], (10C)) * (256) + F6002( l2v2z@[l3v8z], (11C)) * (20C) + F6002( l2v2z@[l3v8z], (12C) );
+    _);
+   _until (l3v8z = (3840));
+    _for l3v5z := (1C) _to (4C) _do _(;
+      P6367( pieces[l3v5z] );
+    _);
+    P5743;
+  _);
+_);
 
 _procedure P7272;
+_label 1;
+_var l3v1z, l3v2z, l3v3z:integer; l3v4z: _array [1..1] _of integer;
 _(
+  P5252;
+  P5272( (0C) );
+  gl389z := false;
+  _for l3v1z := (1C) _to (698) _do _(;
+    P6064(l2v2z@[l3v1z], (7C), (0C) );
   _);
+  1:
+  P5131( (3C) );
+  P6660(l3v2z, l3v3z, l3v4z[1]);
+  _if (l3v4z[1] = (1C)) _then _(
+    P5131( (7C) );
+    exit
+  _);
+  P6327( l3v2z, l3v3z );
+  P5743;
+  P5646( l3v2z, l3v3z, false, chr(226) );
+  (*=c-*)P7047(l3v2z, l3v3z, l3v4z);(*=c+*)
+  _if (l3v4z[1] = (13C)) _then _(
+    P5131( (7C) );
+    P5131( (4C) );
+    exit
+  _);
+  _if (l3v4z[1] = (14C)) _then _(
+    P5131( (10C) );
+    exit
+  _);
+  P5646( l3v2z, l3v3z, true, chr(126) );
+  P6327( l3v2z, l3v3z );
+  myMove( l3v2z, l3v3z );
+  _if (l3v3z = (0C)) _then _(
+    P5131( (7C) );
+    exit
+  _);
+  P5743;
+  _goto 1;
+_);
 
 _( (* checkers *)
   checkPerm;
   readZone( (0C), (400137C) );
   l2v1z := ptr(64000C);
-  l2v2z := (64101C);
+  l2v2z := ptr(64101C);
   P6165;
   gl385z := (1C);
   P5252;
@@ -1240,7 +1370,8 @@ _( (* checkers *)
   gl390z := true;
   gl10z := (698);
   code(ЗЧ76421=ЗЧ76422,);
-  _repeat 
+  1:
+    checkTime;
     P5131( (5C) );
     P6732(l2v4z);
     _if (l2v4z = 'Д') _then 
@@ -1250,13 +1381,13 @@ _( (* checkers *)
     P3030( (4C) );
     P5131( (6C) );
     P6732(l2v4z);
-  _until (l2v4z = 'H');
+  _if (l2v4z = 'H') _then _goto 7452;
+  _goto 1;
+  7452:
   l2v3z := gl387z;
   code(ЗЧ76421=ЗЧ76422,);
-  7452:
-  rules; mymove(f5767, rand(1));
-  P5272(0); P5646(0,0,false,'0'); P5535(' ', 1);P5743;
 _);
+
 _FUNСТI RАNDОМ:RЕАL;(* СЛУЧАЙНОЕ ЧИСЛО В (0,1) *)
 _(
   СОDЕ(К;ВР77=17ЗЧ1,РА3=СЧХRАND,АУАRАND=МР,
