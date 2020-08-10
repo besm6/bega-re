@@ -343,7 +343,7 @@ prinsn (uint32 memaddr, uint32 opcode)
     } else if (struc && arg2 && arg2 < labels.size()) {
         uint off = arg2;
         if (labels[off].empty() || type == OPCODE_REG2 || (reg != 0 && type == OPCODE_ADDRMOD))
-            operand = strprintf(type == OPCODE_REG2 ? "%oB" : "%d", off);
+            operand = strprintf("%d", off);
         else
             operand = labels[off];
     } else if (!struc && arg1 >= 074000) {

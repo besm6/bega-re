@@ -46,6 +46,9 @@
 7047 P7047 p
 7272 P7272 p
 7455 random f
+7506 P7506 p
+7610 F7610 f
+7650 P7650 p
 10230 races p
 10710 load
 10724 inform p
