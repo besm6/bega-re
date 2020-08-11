@@ -23,7 +23,7 @@ zeroto9 = _array [0..9] _of integer;
 _var
 gl10z,
 gl11z:integer;
-gl12z, gl13z, gl14z, gl15z:integer; gl16z:boolean; gl17z, gl18z, gl19z, gl20z:integer;
+gl12z, gl13z, gl14z:integer; gl15z, gl16z:boolean; gl17z, gl18z, gl19z, gl20z:integer;
 gl21z:@rec;
 gl22z:integer;
 gl23z:_set _of 0..45;
@@ -43,8 +43,7 @@ gl390z:boolean; gl390a:integer; display: _array[1..100] _of alfa;
 _procedure filler; 
 _(
 
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
-(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
+(q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
 (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q; (q) _exit q;
@@ -103,7 +102,7 @@ _(
  _if ((gl30z - l2v1z) < (100)) _then _(
     rewrite(tempfile);
     writeln('ВАШЕ ВРЕМЯ ИСТЕКЛО');
-    gl15z := 0;
+    gl15z := false;
     write(tempfile,'КОН  {377');
     _GOTO 11227;
  _)
@@ -240,7 +239,7 @@ _(
         writeln(  getTime );
        2: rewrite(tempfile);
        write(tempfile,'ВЫХ  {377');
-       gl15z := (0C);
+       gl15z := false;
        _GOTO 11227;
      _);
    _until (l2v2z >= (57C));
@@ -1394,6 +1393,7 @@ _(СОDЕ(К;Э05310=,СД/-31/=ЗЧХRАND,Э050114=,
 СД/-5/=ЦСХRАND,ЛУЕВПИЛ=ЛСЕСОРВ,ЗЧХRАND=,)_);(*ЕND RАND0*)
 
 _procedure races;
+_label 10307, 10434, 10521;
 _const c162 = '{162'; c167 = '{167'; c172 = '{172'; c177 = '{177'; c171 = '{171'; c176 = '{176';
 _var l2v1z, l2v2z: real;  l2v3z, l2v4z, l2v5z, l2v6z, l2v7z, l2v8z, l2v9z, l2v10z, 
 l2v11z, l2v12z, l2v13z, l2v14z, l2v15z, l2v16z, l2v17z, l2v18z:integer;
@@ -1406,7 +1406,7 @@ l2v51a:_array [1..9] _of integer;
 l2v60a:_array [1..9] _of integer;
 l2v69a:_array [1..9] _of integer;
 l2v78a:_array [1..9] _of integer;
-bulk2:_array[88..96]_of integer;
+l2v87a:_array [1..9] _of integer;
 _procedure P7506;
 _label 7551;
 _var l3v1z, l3v2z, l3v3z:integer; l3v4z: _array[1..6] _of char; l3v10z: boolean;
@@ -1439,7 +1439,7 @@ _(
     writeln('НЕРВНЫМ НА БЕГА ХОДИТЬ ВРЕДНО !');
     rewrite(tempfile);
     write(tempfile,'КОН  {377');
-    gl15z := 0;
+    gl15z := false;
     _GOTO 11227;
   _);
   2: _(
@@ -1591,6 +1591,7 @@ _( (* races *)
   TTIN( (2C) );
   _if F7610 _then
     _GOTO 11132;
+  10307:
   P3030( (10C) );
   _for l2v18z := (1C) _to l2v7z _do _(;
     gl12z := (trunc(random * 3.0) + (1C));
@@ -1616,39 +1617,78 @@ _( (* races *)
         l2v1z := random * l2v33a[l2v18z];
         _if l2v1z >= 0.99 _then
           l2v1z := 0.99;
-         _if (l2v1z >= l2v2z) _then (q) _(
-           gl12z := trunc((((l2v8z + (1C))) * l2v1z));
-           _if ((l2v13z - l2v60a[l2v18z]) >= l2v10z) _then _(
-             gl12z := (gl12z + l2v9z);
-             _if (gl12z > l2v8z) _then _(
-               gl12z := l2v8z;
-             _)
-           _);
-           l2v17z := (l2v60a[l2v18z] + gl12z);
-           _if ((l2v5z - (1C)) <> l2v17z) _or (gl12z <> (0C)) _then (q) _(
-             _if (l2v60a[l2v18z] < l2v5z) _and
+          _if (l2v1z < l2v2z) _then _goto 10434;
+          gl12z := trunc((((l2v8z + (1C))) * l2v1z));
+          _if ((l2v13z - l2v60a[l2v18z]) >= l2v10z) _then _(
+            gl12z := (gl12z + l2v9z);
+            _if (gl12z > l2v8z) _then _(
+              gl12z := l2v8z;
+            _)
+          _);
+          l2v17z := (l2v60a[l2v18z] + gl12z);
+          _if ((l2v5z - (1C)) <> l2v17z) _or (gl12z <> (0C)) _then (q) _(
+            _if (l2v60a[l2v18z] < l2v5z) _and
                  (l2v17z >= l2v5z) _then _(
-               l2v17z := (l2v17z - l2v6z);
-               gl12z := (gl12z - l2v6z);
-               _if (l2v17z <= l2v5z) _then _(
-                 l2v17z := (l2v5z - (1C));
-                 gl12z := (l2v17z - l2v60a[l2v18z]);
-               _)
-             _);
-             l2v78a[l2v18z] := gl12z;
-             l2v69a[l2v18z] := l2v17z;
-             _if (l2v17z > l2v12z) _then
-               l2v12z := l2v17z;
-           _) _else _(; (* 10434 *)
-             l2v15z := (l2v15z + (1C));
-             l2v42a[l2v18z] := false;
-             l2v78a[l2v18z] := -1;
-             l2v69a[l2v18z] := 0;
-           _)
-         _)
-      _); (* 10443 *)
-    _) (* for *)
+              l2v17z := (l2v17z - l2v6z);
+              gl12z := (gl12z - l2v6z);
+              _if (l2v17z <= l2v5z) _then _(
+                l2v17z := (l2v5z - (1C));
+                gl12z := (l2v17z - l2v60a[l2v18z]);
+              _)
+            _);
+            l2v78a[l2v18z] := gl12z;
+            l2v69a[l2v18z] := l2v17z;
+            _if (l2v17z > l2v12z) _then
+              l2v12z := l2v17z;
+            _) _else 10434: _(; (* 10434 *)
+            l2v15z := (l2v15z + (1C));
+            l2v42a[l2v18z] := false;
+            l2v78a[l2v18z] := -1;
+            l2v69a[l2v18z] := 0;
+          _)
+      _);
+    _); (* 10445 *)
+    _while (l2v12z >= l2v4z) _do _(
+      l2v17z := (0C);
+      _for l2v18z := (1C) _to l2v7z _do _(;
+        _if (l2v69a[l2v18z] = l2v12z) _and
+            l2v42a[l2v18z] _then _(
+          l2v17z := (l2v17z + (1C));
+          gl12z := l2v17z;
+          (L10461) _(
+            gl12z := (gl12z - (1C));
+            _if (gl12z = (0C)) _then _exit L10461
+            _else _if (l2v78a[l2v18z] > l2v78a[l2v87a[gl12z]]) _then _exit L10461
+            _else _if (l2v78a[l2v18z] < l2v78a[l2v87a[gl12z]]) _then _goto 10521
+            _else _if (l2v33a[l2v18z] < l2v33a[l2v87a[gl12z]]) _then _exit L10461
+            _else _if (l2v33a[l2v18z] > l2v33a[l2v87a[gl12z]]) _then _goto 10521
+            _else _(
+              l2v1z :=   random;
+              _if (l2v1z > 0.5) _then
+                _exit L10461
+              _else (q) _exit q;
+              (q) _exit q; 
+            _);
+            10521: l2v87a[(gl12z + (1C))] := l2v87a[gl12z];
+            _goto L10461
+          _); (* 10525 *)
+          l2v87a[(gl12z + (1C))] := l2v18z;
+        _); (* 10530 *)
+      _);
+      (* 10532 *)
+      _for l2v18z := (1C) _to l2v17z _do _(;
+        l2v14z := (l2v14z + (1C));
+        gl12z := l2v87a[l2v18z];
+        l2v51a[gl12z] := l2v14z;
+        l2v42a[gl12z] := false;
+        l2v78a[gl12z] := -2;
+        l2v69a[gl12z] := (0C);
+      _);
+      l2v12z := (l2v12z - (1C));
+    _); (* 10552 *)
+    P10073;
   _until (l2v15z + l2v14z) = l2v7z;
+  (q) _exit q;
   writeln('ЗАБЕГ ОКОНЧЕН');
   writeln('ЕЩЕ ПОБЕГАЕМ ?');
   TTIN( (2C) );
@@ -1657,16 +1697,63 @@ _( (* races *)
     gl16z := true;
     exit
   _);
+  _if (l2v11z > (6C)) _then _(
+    writeln('НЕ НАДО УВЛЕКАТЬСЯ !{175НА СЕГОДНЯ ХВАТИТ !');
+    rewrite(tempfile);
+    write(tempfile,'ВЫХ  {377');
+    gl15z := false;
+    _GOTO 11227;
+  _);
+  checkPerm;
+  _goto 10307;
+_);
 
+_procedure P10614;
+_var l2v1z, l2v2z: integer;
+_(
+  code(э0634=,);
+  l2v1z := ;
+  l2v1z := (l2v1z - gl17z);
+  _if (l2v1z < (0C)) _then exit;
+  code(э05310=,);
+  l2v2z := ;
+  l2v2z := (l2v2z - gl18z);
+  _if (l2v2z < (0C)) _then exit;
+  gl19z := shift(l2v1z,2);
+  P3030( (37C) );
+  (q)
+  gl19z := shift(l2v2z,9);
+  P3030( (41C) );
+_);
+_procedure exec(arg:integer);
+_procedure P10640(_var f:text; _var i:integer; j:integer); _( code(ПБ76022=,); _);
+_(
+  _if gl15z _then _GOTO 11244;
+  flags := (flags + [13]);
+  gl20z := (31C);
+  P10614;
+  P10640(tempfile, gl22z, (76C) );
+_);
+
+_procedure P10672;
+_procedure P10664(_var f:text; _var i:integer; j:integer); _( code(ПБ76021=); _);
+_(
+  P10664(tempfile, gl22z, (76C) );
+  gl15z := (flags * [13]) <> [13];
+  gl20z := (31C);
+  _GOTO 11136;
+
+
+  
 _);
 
 _procedure inform;
 _var l2v1z:alfa;
-_procedure load(_var l3a1z: alfa); 
+_procedure load(l3a1z: alfa); 
 _(
- rewrite(tempfile);
- write(tempfile,'ШКО   ':6);
- (* readln( l3a1z:6 ); *)
+  rewrite(tempfile);
+  write(tempfile,'ШКО   ');
+  write(tempfile, l3a1z);
 _);
 _( (* inform *)
  _if getCmd(l2v1z, 3) _then _(
