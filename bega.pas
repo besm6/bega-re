@@ -19,7 +19,6 @@ n36 = 36;
 n45 = 45; n11 = 11; LEFT = '{146'; n32 = 32; n76 = 76; n9 = 9;
 n47=47;n1023=1023; n6=6; n100=100; n2=2; n39=39; n4=4; n10=10;
 _type bits = _set _of 0..47; rec = _array[1..10] _of bits;
-zeroto9 = _array [0..9] _of integer;
 _var
 gl10z:integer;
 gl11z:bits;
@@ -36,10 +35,10 @@ awake:boolean;
 gl42z, gl43z, gl44z:integer;
 gl45z: _array [1..39] _of integer;
 tempfile:text;
-pieces:_array[1..4] _of integer; gl374z: integer;
-field: _array [1..10] _of integer;
-gl385z, gl386z, gl387z, termno:integer;
-gl389z,
+pieces:_array[1..4] _of integer; 
+field: _array [0..10] _of integer;
+dsppos, gl386z, gl387z, termno:integer;
+black,
 gl390z:boolean; gl390a:bits; display: _array[1..100] _of alfa;
 
 _procedure TTIN(level:integer);
@@ -99,16 +98,16 @@ _(
  _)
 _);
 _procedure P2775;
-_var l2v1z: alfa;
+_var a: alfa;
 _(
  writeLN;
  checkTime;
  code(CЧ77015=);
- l2v1z := ;
- _if (l2v1z = 'Н{3770000') _then _GOTO 11132;
+ a := ;
+ _if (a = 'Н{3770000') _then _GOTO 11132;
 _);
 
-_procedure P3006(_var a:alfa);
+_procedure P3006(_var a:alfa); (* unused *)
 _var t:_array [1..6] _of char; i:integer;
 _(
  _for i := 1 _to 6 _do _(
@@ -210,7 +209,7 @@ _(
   l2v4z := l2v3z _div 100;
   l2v3z := l2v3z - l2v4z * 100;
   _if (zeller( l2v3z, l2v4z, l2v5z) > 4) _then exit;
-  readZone( (66C), (517) );
+  readZone(66C, 517);
   l2v14z := gl21z@[6];
   l2v7z :=   getTime;
   unpck(l2v8z[1], l2v7z);
@@ -218,7 +217,7 @@ _(
   _if _not (l2v2z _IN l2v14z) _then _(
     writeln('ИГРА СЕЙЧАС ЗАКРЫТА');
     _repeat
-      l2v2z := (l2v2z + (1C));
+      l2v2z := l2v2z + 1;
       _if (l2v2z _IN l2v14z) _then _(
         write('ОТКРОЕТСЯ В ');
         l2v1z := l2v2z _div 2;
@@ -233,7 +232,7 @@ _(
        gl15z := false;
        _GOTO 11227;
      _);
-   _until (l2v2z >= (57C));
+   _until l2v2z >= 57C;
    writeln('СЕГОДНЯ НЕ ОТКРОЕТСЯ');
    _goto 2;
   _)
@@ -247,13 +246,13 @@ _procedure sleep(l2a1z:integer);
 _var l2v1z:integer;
 _(
  l2a1z := trunc(l2a1z / 4);
- _while (l2a1z > (0C)) _do _(
-   _if (l2a1z > (2044)) _then _(
-     l2v1z := (2044);
-     l2a1z := (l2a1z - l2v1z);
+ _while l2a1z > 0 _do _(
+   _if l2a1z > 2044 _then _(
+     l2v1z := 2044;
+     l2a1z := l2a1z - l2v1z;
    _) _else _(
      l2v1z := l2a1z;
-     l2a1z := (0C);
+     l2a1z := 0;
    _)
  _);
  l2v1z := l2v1z;
@@ -558,7 +557,7 @@ _(
   (loop) _( 
     l2v3z :=   extra71( termno );
     _case l2v3z _of
-    0: _( sleep( (10C) ); _goto loop _);
+    0: _( sleep(8); _goto loop _);
     3: _GOTO 11230
     _end;
   _);
@@ -596,15 +595,15 @@ _(
   code(Э05310=,СД/1/=2ЗЧ5,);
   rand := (l2v1z _MOD l2a1z);
 _);
-_procedure P5034;
+_procedure TTOUT;
 _label 1;
 _var l2v1z, l2v2z:alfa; l2v3z, l2v4z, l2v5z, l2v6z, l2v7z: integer;
 arr:_array [1..100] _of alfa;
 _(
-  display[gl385z] := '{000{000{000{000{000{000';
+  display[dsppos] := '{000{000{000{000{000{000';
   l2v7z := (1C);
   l2v6z := (0C);
-  _for l2v4z := (1C) _to gl385z _do _(
+  _for l2v4z := (1C) _to dsppos _do _(
     l2v1z := display[l2v4z];
     _for l2v5z := (1C) _to (6C) _do _(
       code(2СЧ3=СД/-10/,2ЗЧ3=МР0,2ЗЧ5=,);
@@ -618,12 +617,12 @@ _(
         l2v6z := (l2v6z + (1C));
       _);
     _);
-    _if (l2v4z = gl385z) _then
+    _if (l2v4z = dsppos) _then
       _for l2v6z := (l2v6z + (1C)) _to (6C) _do
         code(2СЧ4=СД/-10/,2ЗЧ4=,); (* l2v2z := l2v2z << 8 *)
       arr[l2v7z] := l2v2z;
   _);
-  gl385z := 1;
+  dsppos := 1;
   P3442( termno, 1, arr);
   1: _case  extra71( termno ) _of
     0: sleep(4);
@@ -631,19 +630,19 @@ _(
     3: _GOTO 11132
   _end; _goto 1;
 _);
-_procedure P5131(l2a1z: integer);
+_procedure msg(num: integer);
 _(
-  _if ((l2a1z > 6) _and _not gl389z) _or (l2a1z > 7) _then _(
+  _if ((num > 6) _and _not black) _or (num > 7) _then _(
     (*=C-*)
-    display[1] := 311523246515232C; (* 014 232x5 *)
-    display[2] := 4651523246515232C; (* 232x6 *)
-    display[3] := 4270561342705613C; (* 213x6 *)
+    display[1] := 311523246515232C; (* HOME DN DN DN DN DN *)
+    display[2] := 4651523246515232C; (* DN DN DN DN DN DN  *)
+    display[3] := 4270561342705613C; (* DC DC DC DC DC DC *)
     display[4] := ;
     (*=C+*)
-    gl385z := (5C);
-    P5034;
+    dsppos := 5;
+    TTOUT;
   _);
-  _case l2a1z _of
+  _case num _of
   1: writeln('ИГРА К ВАШИМ УСЛУГАМ
 НУЖНЫ ПРАВИЛА ?');
   3: writeln('ВАШ ХОД:');
@@ -657,35 +656,35 @@ _(
   11: writeln('НЕВЕРНЫЙ ХОД !');
   12: writeln('ЭТО НЕ ХОД !')
   _end;
-  _if (l2a1z > 8) _then
-    P5131( gl386z )
+  _if (num > 8) _then
+    msg( gl386z )
   _else
-    gl386z := l2a1z;
+    gl386z := num;
 _);
 
-_procedure P5252;
-_var l2v1z: integer;
+_procedure setup;
+_var i: integer;
 _(
-  _for l2v1z := 2 _to 10 _do
-    field[l2v1z] := 0;
+  _for i := 2 _to 10 _do
+    field[i] := 0;
   field[1] := 2;
-  gl374z := ;
+  field[0] := ;
   field[3] := ;
   field[5] := 1;
-  pieces[1] := (0C);
-  pieces[2] := (1C);
-  pieces[3] := (3C);
-  pieces[4] := (5C);
+  pieces[1] := 0;
+  pieces[2] := 1;
+  pieces[3] := 3;
+  pieces[4] := 5;
 _);
 _procedure P5272(l2a1z:integer);
 _var l2v1z:integer; a:_array [1..6] _of char;
 _(
   _if (l2a1z = 1) _then
-    P5252;
+    setup;
   (*=C-*)
-  display[1] := (4771763747717637C);
+  display[1] := 4771763747717637C; (* 6 x clear screen *)
   display[2] := ;
-  display[3] := (5012024050120240C);
+  display[3] := (5012024050120240C); (* 6 spaces *)
   display[4] := ;
   display[11] := ;
   display[12] := ;
@@ -699,7 +698,7 @@ _(
   display[82] := ;
   display[89] := ;
   display[90] := ;
-  display[5] := 1322645513226455C; (* 055x6 ------ *)
+  display[5] := 1322645513226455C; (* ------ *)
   display[7] := ;
   display[9] := ;
   display[21] := ;
@@ -721,7 +720,7 @@ _(
   display[91] := ;
   display[93] := ;
   display[95] := ;
-  display[14] := (6222645513226455C);
+  display[14] := 6222645513226455C; (* I----- *)
   display[16] := ;
   display[46] := ;
   display[48] := ;
@@ -729,13 +728,13 @@ _(
   display[52] := ;
   display[84] := ;
   display[86] := ;
-  display[29] := (5012024062320240C);
+  display[29] := 5012024062320240C; (* ___I__ *)
   display[31] := ;
   display[33] := ;
   display[67] := ;
   display[69] := ;
   display[71] := ;
-  display[6] := (1332024050120240C);
+  display[6] := 1332024050120240C; (* -_____ *)
   display[8] := ;
   display[36] := ;
   display[38] := ;
@@ -751,26 +750,26 @@ _(
   display[78] := ;
   display[92] := ;
   display[94] := ;
-  display[10] := (1320520040100200C);
+  display[10] := 1320520040100200C; (* - LF NUL NUL NUL NUL *)
   display[26] := ;
   display[80] := ;
-  display[18] := (6220520040100200C);
+  display[18] := 6220520040100200C; (* I LF NUL NUL NUL NUL *)
   display[88] := ;
-  display[28] := (5012024053720240C);
+  display[28] := 5012024053720240C; (* ___/__ *)
   display[32] := ;
   display[68] := ;
-  display[30] := (5012024027120240C);
+  display[30] := 5012024027120240C; (* ___\__ *)
   display[66] := ;
   display[70] := ;
-  display[34] := (5012024027120012C);
-  display[72] := (5012024053720012C);
-  display[54] := (5014441240100200C);
-  display[44] := (1322641240100200C);
+  display[34] := 5012024027120012C; (* ___\_ LF *)
+  display[72] := 5012024053720012C; (* ___/_ LF *)
+  display[54] := 5014441240100200C; (* _I LF NUL NUL NUL *)
+  display[44] := 1322641240100200C; (* -- LF NUL NUL NUL *)
   display[64] := ;
-  display[96] := 13205T; (* 055 012 *)
+  display[96] := 13205T; (* - LF EOT *)
   (*=C+*)
-  l2v1z := (0C);
-  _while (l2v1z <= 9) _do _(
+  l2v1z := 0;
+  _while l2v1z <= 9 _do _(
     a[1] := chr(201);
     a[3] := chr(160);
     a[6] := ;
@@ -780,18 +779,18 @@ _(
     0: _( a[4] := chr(160);  a[5] := ; _)  (*    *)
     _end;
     _case l2v1z _of
-    0: _( a[2] := chr(60C); gl385z := (55C); _);
-    1: _( a[2] := chr(177); gl385z := (15C); _);
-    2: _( a[2] := chr(178); gl385z := (57C); _);
-    3: _( a[2] := chr(63C); gl385z := (123C); _);
-    4: _( a[2] := chr(180); gl385z := (125C); _);
-    5: _( a[2] := chr(65C); gl385z := (61C); _);
-    6: _( a[2] := chr(66C); gl385z := (17C); _);
-    7: _( a[2] := chr(183); gl385z := (21C); _);
-    8: _( a[2] := chr(184); gl385z := (63C); _);
-    9: _( a[2] := chr(71C); gl385z := (127C); _)
+    0: _( a[2] := chr(60C); dsppos := 55C; _);
+    1: _( a[2] := chr(177); dsppos := 15C; _);
+    2: _( a[2] := chr(178); dsppos := 57C; _);
+    3: _( a[2] := chr(63C); dsppos := 123C; _);
+    4: _( a[2] := chr(180); dsppos := 125C; _);
+    5: _( a[2] := chr(65C); dsppos := 61C; _);
+    6: _( a[2] := chr(66C); dsppos := 17C; _);
+    7: _( a[2] := chr(183); dsppos := 21C; _);
+    8: _( a[2] := chr(184); dsppos := 63C; _);
+    9: _( a[2] := chr(71C); dsppos := 127C; _)
     _end;
-   pck(a[1], display[gl385z]);
+   pck(a[1], display[dsppos]);
    l2v1z := l2v1z+1;
   _);
   a[1] := chr(201);
@@ -804,10 +803,10 @@ _(
     0: _( a[5] := chr(160);  a[6] := ; _)  (*    *)
   _end;
   pck(a[1], display[53]);
-  gl385z := (141C);
-  P5034;
+  dsppos := 141C;
+  TTOUT;
   _if gl390z _and (gl386z <> 5) _and (gl386z <> 6) _then
-    P5131( gl386z );
+    msg( gl386z );
 _);
 
 _procedure rules;
@@ -819,10 +818,10 @@ _(
  НАЧАЛЬНОЕ ПОЛОЖЕНИЕ ИЗОБРАЖЕНО НА РИСУНКЕ:
 ');
   P2775;
-  sleep( (125C) );
+  sleep(85);
   gl390z := false;
   P5272(0);
-  sleep( (55C) );
+  sleep(45);
   write('
  БЕЛЫЕ НА КЛЕТКАХ 0,1,3, ЧЕРНАЯ НА КЛЕТКЕ 5. ВОЗМОЖНЫЕ НАПРАВЛЕНИЯ
 ДВИЖЕНИЯ ПОКАЗАНЫ ЧЕРТОЧКАМИ. БЕЛЫЕ ФИШКИ МОГУТ ХОДИТЬ ТОЛЬКО
@@ -849,25 +848,25 @@ _procedure checkers;
 _label 1, 7452;
 _type pair = _record f1, f2: integer _end; arbits = _array [1..10] _of bits;
 _var
-l2v1z, l2v2z:@arbits; l2v3z:integer;  l2v4z: char; pairarray:_array [1..18] _of pair;
+l2v1z, l2v2z:@arbits; l2v3z:integer;  c: char; pairarray:_array [1..18] _of pair;
 
-_procedure P5535(l3a1z: char; l3a2z:integer);
-_var l3v1z: _array [1..6] _of char; l3v7z: integer;
+_procedure replicate(c: char; cnt:integer);
+_var a: _array [1..6] _of char; i: integer;
 _(
-  _while (l3a2z > 0) _do _(
-    _for l3v7z := (1C) _to (6C) _do _(
-      _if (l3a2z <= 0) _then
-        l3v1z[l3v7z] := chr(128)
+  _while (cnt > 0) _do _(
+    _for i := 1 _to 6 _do _(
+      _if (cnt <= 0) _then
+        a[i] := chr(128)
       _else _(
-        l3v1z[l3v7z] := l3a1z;
-        l3a2z := l3a2z - 1;
+        a[i] := c;
+        cnt := cnt - 1;
       _);
     _);
-    pck(l3v1z[1], display[gl385z]);
-    gl385z := (gl385z + 1);
+    pck(a[1], display[dsppos]);
+    dsppos := dsppos + 1;
   _); (* while *)
 _);
-_procedure P5646(l3a1z, l3a2z: integer; l3a3z: boolean; l3a4z: char);
+_procedure DrawMove(pos1, pos2: integer; isMyMove: boolean; c: char);
 _var l3v1z, l3v2z, l3v3z, l3v4z: integer;
 _procedure P5565(l4a1z: integer);
 _(
@@ -887,50 +886,48 @@ _(
 _);
 _(
   (* 5646 *)
-  P5565( l3a1z );
-  (*=c-*) display[gl385z] := (310020040100200C); (*=c+*)
-  gl385z := (gl385z + (1C));
-  P5535( chr(154), l3v2z );
-  P5535( chr(30C), l3v1z );
-  P5535( chr(160), (2C) );
+  P5565( pos1 );
+  (*=c-*) display[dsppos] := (310020040100200C); (*=c+*)
+  dsppos := (dsppos + (1C));
+  replicate( chr(154), l3v2z );
+  replicate( chr(30C), l3v1z );
+  replicate( chr(160), (2C) );
   l3v3z := l3v1z;
   l3v4z := l3v2z;
-  P5565( l3a2z );
-  _if ((l3v2z - l3v4z) > (0C)) _then
-    P5535( chr(154), (l3v2z - l3v4z) )
+  P5565( pos2 );
+  _if l3v2z - l3v4z > 0 _then
+    replicate( chr(154), l3v2z - l3v4z )
   _else
-    P5535( chr(153), (l3v4z - l3v2z) );
-  _if (((l3v1z - l3v3z) - (2C)) > (0C)) _then
-    P5535( chr(30C), ((l3v1z - l3v3z) - (2C)) )
+    replicate( chr(153), l3v4z - l3v2z );
+  _if l3v1z - l3v3z - 2 > 0 _then
+    replicate( chr(30C), l3v1z - l3v3z - 2)
   _else
-    P5535( chr(136), ((l3v3z - l3v1z) + (2C)) );
-  P5535( l3a4z, (2C) );
-  _if (l3a3z) _then _( (*=c-*)
-    display[gl385z] := (311523246515232C);
-    display[gl385z + 1] := (4651523246515232C);
-    display[gl385z + 2] := (4270561342705613C);
-    display[gl385z + 3] := ;
-    gl385z := gl385z + 4;
+    replicate( chr(136), l3v3z - l3v1z + 2);
+  replicate( c, 2);
+  _if (isMyMove) _then _( (*=c-*)
+    display[dsppos] := 311523246515232C; (* HOME DN DN DN DN DN *)
+    display[dsppos + 1] := 4651523246515232C; (* DN DN DN DN DN DN *)
+    display[dsppos + 2] := 4270561342705613C; (* DC DC DC DC DC DC *)
+    display[dsppos + 3] := ;
+    dsppos := dsppos + 4;
   _); (*=c+*)
-  P5034;
+  TTOUT;
 _);
-_procedure P5743;
-_var l3v1z, l3v2z, l3v3z: integer;
+_procedure sort;
+_var i, j, t: integer;
 _(
-  _for l3v1z := (1C) _to (3C) _do _(
-    _for l3v2z := (l3v1z + (1C)) _to (3C) _do _(
-      _if (pieces[l3v2z] < pieces[l3v1z]) _then _(
-        l3v3z := pieces[l3v1z];
-        pieces[l3v1z] := pieces[l3v2z];
-        pieces[l3v2z] := l3v3z;
-      _);
-    _)
-  _)
+  _for i := 1 _to 3 _do
+    _for j := i + 1 _to 3 _do
+      _if pieces[j] < pieces[i] _then _(
+        t := pieces[i];
+        pieces[i] := pieces[j];
+        pieces[j] := t;
+      _)
 _);
 
-_function F5767:integer;
+_function posNum:integer;
 _(
-  F5767 := ((((pieces[1] * (303240C)) + (pieces[2] * (10000))) + (pieces[3] * (100))) + pieces[4]);
+  posNum := pieces[1] * 100000 + pieces[2] * 10000 + pieces[3] * 100 + pieces[4];
 _);
 _function F6002(l3a1z:_set _of 0..47; l3a2z: integer): integer;
 _var l3v1z, l3v2z, l3v3z, l3v4z: integer;
@@ -973,14 +970,14 @@ _);
 _function F6130(l3a1z: integer; _var l3a2z:text):integer;
 _var l3v1z: integer;  l3v2z: char; l3v3z: integer;
 _(
-  l3v1z := (0C);
-  _for l3v3z := (1C) _to l3a1z _do _(
+  l3v1z := 0;
+  _for l3v3z := 1 _to l3a1z _do _(
     (* a more efficient implementation of range checking requires alignment *)
     (q) _exit q;
     (q) _exit q;
     (q) _exit q;
     (q) _exit q;
-    _if ord(l3a2z@) > ord('9') _then _(
+    _if l3a2z@ > '9' _then _(
       F6130 := l3v1z;
       exit;
     (q) _exit q;
@@ -988,179 +985,172 @@ _(
     _);
     l3v2z := l3a2z@;
     get(l3a2z);
-    l3v1z := ((l3v1z * (12C)) + ord(l3v2z));
+    l3v1z := l3v1z * 10 + ord(l3v2z);
   _);
   F6130 := l3v1z;
 _); 
 _procedure P6165;
 _(
 
-  pairarray[1].f1 := (0C);
-  pairarray[1].f2 := (2C);
-  pairarray[2].f1 := (0C);
-  pairarray[2].f2 := (3C);
-  pairarray[3].f1 := (1C);
-  pairarray[3].f2 := (5C);
-  pairarray[4].f1 := (1C);
-  pairarray[4].f2 := (6C);
-  pairarray[5].f1 := (2C);
-  pairarray[5].f2 := (1C);
-  pairarray[6].f1 := (2C);
-  pairarray[6].f2 := (5C);
-  pairarray[7].f1 := (3C);
-  pairarray[7].f2 := (2C);
-  pairarray[8].f1 := (3C);
-  pairarray[8].f2 := (5C);
-  pairarray[9].f1 := (4C);
-  pairarray[9].f2 := (11C);
-  pairarray[10].f1 := (5C);
-  pairarray[10].f2 := (4C);
-  pairarray[11].f1 := (5C);
-  pairarray[11].f2 := (7C);
-  pairarray[12].f1 := (5C);
-  pairarray[12].f2 := (10C);
-  pairarray[13].f1 := (5C);
-  pairarray[13].f2 := (11C);
-  pairarray[14].f1 := (6C);
-  pairarray[14].f2 := (5C);
-  pairarray[15].f1 := (7C);
-  pairarray[15].f2 := (12C);
-  pairarray[16].f1 := (10C);
-  pairarray[16].f2 := (7C);
-  pairarray[17].f1 := (10C);
-  pairarray[17].f2 := (12C);
-  pairarray[18].f1 := (11C);
-  pairarray[18].f2 := (10C);
+  pairarray[1].f1 := 0;
+  pairarray[1].f2 := 2;
+  pairarray[2].f1 := 0;
+  pairarray[2].f2 := 3;
+  pairarray[3].f1 := 1;
+  pairarray[3].f2 := 5;
+  pairarray[4].f1 := 1;
+  pairarray[4].f2 := 6;
+  pairarray[5].f1 := 2;
+  pairarray[5].f2 := 1;
+  pairarray[6].f1 := 2;
+  pairarray[6].f2 := 5;
+  pairarray[7].f1 := 3;
+  pairarray[7].f2 := 2;
+  pairarray[8].f1 := 3;
+  pairarray[8].f2 := 5;
+  pairarray[9].f1 := 4;
+  pairarray[9].f2 := 9;
+  pairarray[10].f1 := 5;
+  pairarray[10].f2 := 4;
+  pairarray[11].f1 := 5;
+  pairarray[11].f2 := 7;
+  pairarray[12].f1 := 5;
+  pairarray[12].f2 := 8;
+  pairarray[13].f1 := 5;
+  pairarray[13].f2 := 9;
+  pairarray[14].f1 := 6;
+  pairarray[14].f2 := 5;
+  pairarray[15].f1 := 7;
+  pairarray[15].f2 := 10;
+  pairarray[16].f1 := 8;
+  pairarray[16].f2 := 7;
+  pairarray[17].f1 := 8;
+  pairarray[17].f2 := 10;
+  pairarray[18].f1 := 9;
+  pairarray[18].f2 := 8;
 _);
 
-_function F6233(l3a1z, l3a2z:integer; l3a3z:boolean):boolean;
-_var l3v1z:integer;
+_function validate(pos1, pos2:integer; l3a3z:boolean):boolean;
+_var i:integer;
 _(
-  _if (l3a1z > (12C)) _or (l3a2z > (12C)) _or (l3a1z < (0C)) _or (l3a2z < (0C)) 
-    _or ((field[l3a1z] = 2) _and l3a3z) _or ((field[l3a1z] = 1) _and _not l3a3z)
-    _or (field[l3a2z] <> 0) _or (field[l3a1z] = 0) _then _(
-    F6233 := false;
+  _if (pos1 > 10) _or (pos2 > 10) _or (pos1 < 0) _or (pos2 < 0) 
+    _or ((field[pos1] = 2) _and l3a3z) _or ((field[pos1] = 1) _and _not l3a3z)
+    _or (field[pos2] <> 0) _or (field[pos1] = 0) _then _(
+    validate := false;
     exit
   _);
-  _for l3v1z := (1C) _to (22C) _do _(
-    _if _not ((pairar[l3v1z].f1 <> l3a1z) _or (pairar[l3v1z].f2 <> l3a2z)) _or
-      (_not (((pairar[l3v1z].f2 <> l3a1z) _or (pairar[l3v1z].f1 <> l3a2z))) _and l3a3z) _then _(
-      F6233 := true;
+  _for i := 1 _to 18 _do _(
+    _if _not ((pairar[i].f1 <> pos1) _or (pairar[i].f2 <> pos2)) _or
+      (_not (((pairar[i].f2 <> pos1) _or (pairar[i].f1 <> pos2))) _and l3a3z) _then _(
+      validate := true;
       exit;
     _)
   _);
-  _if (((l3a1z - (1C)) = l3a2z) _and  l3a3z) _or ((l3a1z + (1C)) = l3a2z) _then _(
-    F6233 := true;
+  _if ((pos1 - 1 = pos2) _and  l3a3z) _or (pos1 + 1 = pos2) _then _(
+    validate := true;
     exit
   _);
-  F6233 := false;
+  validate := false;
 _);
 
-_procedure P6327(l3a1z, l3a2z: integer);
-_var l3v1z:integer;
+_procedure doMove(pos1, pos2: integer);
+_var i:integer;
 _(
-  field[l3a2z] := field[l3a1z];
-  field[l3a1z] := (0C);
-  _for l3v1z := (1C) _to (4C) _do _(
-    _if (pieces[l3v1z] = l3a1z) _then
-      pieces[l3v1z] := l3a2z;
+  field[pos2] := field[pos1];
+  field[pos1] := 0;
+  _for i := 1 _to 4 _do _(
+    _if (pieces[i] = pos1) _then
+      pieces[i] := pos2;
   _);
 _);
 
-_procedure myMove(l3a1z, l3a2z: integer);
+_procedure myMove(pos1, pos2: integer);
 _(
-  write('МОЙ ХОД ':10);
-  write(l3a1z:1);
-  write(' - ');
-  writeln(l3a2z:1);
+  writeln('МОЙ ХОД ':10, pos1:1, ' - ', pos2:1);
 _);
 
 
-_procedure P6367(_var l3a1z: integer);
+_procedure flip(_var i: integer);
 _(
-  _case l3a1z _of
-  1:l3a1z := 3;
-  3:l3a1z := 1;
-  4:l3a1z := 6;
-  6:l3a1z := 4;
-  7:l3a1z := 9;
-  9:l3a1z := 7
+  _case i _of
+  1:i := 3;
+  3:i := 1;
+  4:i := 6;
+  6:i := 4;
+  7:i := 9;
+  9:i := 7
 _end;
 _);
 
-_procedure P6420(_var l3a1z, l3a2z, l3a3z: integer);
-_var l3v1z, l3v2z, l3v3z, l3v4z, l3v5z, l3v6z, l3v7z, l3v8z: integer;
-l3v8arr:_array[1..4] _of integer;
+_procedure PickWhite(_var l3a1z, l3a2z, l3a3z: integer);
+_var l3v1z, l3v2z, i, l3v4z, j, l3v6z, l3v7z, l3v8z: integer;
+saved:_array[1..4] _of integer;
 _(
-  _for l3v5z := (1C) _to (4C) _do _(;
-    l3v8arr[l3v5z] := pieces[l3v5z];
-  _);
-  _for l3v3z := (1C) _to (2C) _do _(;
-    l3v2z := F5767;
-    l3v4z := (1C);
-    l3v8z := (101C);
+  (* saved := pieces *) _for j := 1 _to 4 _do saved[j] := pieces[j];
+  _for i := 1 _to 2 _do _(
+    l3v2z := posNum;
+    l3v4z := 1;
+    l3v8z := 65;
     _repeat _(
       l3v6z := trunc((l3v4z + l3v8z) / 2);
       l3v7z :=   F6032(l2v1z@[l3v6z] );
       _if (l3v7z = l3v2z) _then _(
-        l3v1z := (rand( (3C)) * (2C));
-        l3a1z :=   F6002( l2v1z@[l3v6z], (l3v1z + (4C)) );
-        l3a2z :=   F6002( l2v1z@[l3v6z], (l3v1z + (5C)) );
-        l3a3z :=   F6002( l2v1z@[l3v6z], (12C) );
-        _for l3v5z := (1C) _to (4C) _do _(;
-          pieces[l3v5z] := l3v8arr[l3v5z];
-        _);
-        _if (l3v3z = (2C)) _then _(
-          P6367( l3a1z );
-          P6367( l3a2z );
+        l3v1z := rand(3) * 2;
+        l3a1z :=   F6002( l2v1z@[l3v6z], l3v1z + 4);
+        l3a2z :=   F6002( l2v1z@[l3v6z], l3v1z + 5);
+        l3a3z :=   F6002( l2v1z@[l3v6z], 10);
+        (* pieces := saved *) _for j := 1 _to 4 _do pieces[j] := saved[j];
+        _if i = 2 _then _(
+          flip( l3a1z );
+          flip( l3a2z );
         _);
         exit
       _)  _else _(
         _if (l3v7z < l3v2z) _then 
-          l3v4z := (l3v6z + (1C))
+          l3v4z := l3v6z + 1
         _else
-          l3v8z := (l3v6z - (1C));
+          l3v8z := l3v6z - 1;
       _);
     _) _until (l3v4z > l3v8z);
-    _for l3v5z := (1C) _to (4C) _do _(;
-      P6367( pieces[l3v5z] );
+    _for j := 1 _to 4 _do _(;
+      flip( pieces[j] );
     _);
-    P5743;
+    sort;
   _);
 _);
 
-_procedure P6551(_var l3a1z, l3a2z:integer; _var l3a3z:char; _var l3a4z:boolean);
-_var l3v1z:integer;
+_procedure readline(_var l3a1z, l3a2z:integer; _var l3a3z:char; _var l3a4z:boolean);
+_var i:integer;
 _(
-  _for l3v1z := (1C) _to (5C) _do _(;
+  _for i := 1 _to 5 _do _(
     (L6561) _(
-      TTIN( (2C) );
-      _if (tempfile@ <> chr(57C)) _then _exit L6561;
+      TTIN(2);
+      _if tempfile@ <> 'П' _then _exit L6561;
       P5272(0);
       _goto L6561;
     _);
-    _if (tempfile@ = chr(52C)) _then _GOTO 7452;
-    _if ord(tempfile@) <= ord('9') _then _(
-      l3a1z :=   F6130( (12C), tempfile );
-      _if (tempfile@ = chr(13C)) _then (a) _(
+    _if tempfile@ = 'K' _then _GOTO 7452;
+    _if tempfile@ <= '9' _then _(
+      l3a1z :=   F6130(10, tempfile );
+      _if tempfile@ = '-' _then (a) _(
         code(16ПВ76312=,);
-        _if (ord(tempfile@) <= ord('9')) _then _(
-          l3a2z := F6130( (12C), tempfile );
+        _if tempfile@ <= '9' _then _(
+          l3a2z := F6130(10, tempfile );
           l3a4z := true;
           exit;
         _) _else
-          P5131(9);
+          msg(9);
       _) _else _(
-        P5131(9);
+        msg(9);
       _);
-    _) _else _if ((ord(tempfile@) >= ord('A')) _and (ord(tempfile@) <= ord('M'))) _then _(
+    _) _else _if (tempfile@ >= 'A') _and (tempfile@ <= 'M') _then _(
       l3a3z := tempfile@;
       l3a4z := false;
       exit;
     _) _else _if true (* not (tempfile@ _in ['0'..'9','A'..'M']) *) _then _(
       (q) _exit q;   (q) _exit q;   (q) _exit q;   (q) _exit q;  (q) _exit q;
       (q) _exit q;   (q) _exit q;   (q) _exit q;   (q) _exit q;
-      P5131(9);
+      msg(9);
       (q) _exit q;
     _); 
   _);
@@ -1168,199 +1158,190 @@ _(
   _GOTO 7452;
 _);
 
-_procedure P6660(_var l3a1z, l3a2z: integer; _var l3a3z: integer);
-_var l3v1z: integer; l3v2z: char; l3v3z:boolean;
+_procedure getMove(_var l3a1z, l3a2z: integer; _var ret: integer);
+_var i: integer; l3v2z: char; l3v3z:boolean;
 _(
-  l3a3z := 0;
-  _for l3v1z := (1C) _to (5C) _do _(;
-    P6551( l3a1z, l3a2z, l3v2z, l3v3z);
-    _if _not l3v3z _and (l3v2z = chr(61C)) _then _(
-      l3a3z := 1;
+  ret := 0;
+  _for i := 1 _to 5 _do _(
+    readline( l3a1z, l3a2z, l3v2z, l3v3z);
+    _if _not l3v3z _and (l3v2z = 'C') _then _(
+      ret := 1;
       exit
-    _) _else _if _not l3v3z _and (l3v2z <> chr(61C)) _then _(
-      P5131( (14C) );
-    _) _else _if l3v3z _and F6233( l3a1z, l3a2z, gl389z) _then _(
-      l3a3z := 0;
+    _) _else _if _not l3v3z _and (l3v2z <> 'C') _then _(
+      msg(12);
+    _) _else _if l3v3z _and validate( l3a1z, l3a2z, black) _then _(
+      ret := 0;
       exit
     _) _else (q) _(
-      P5131( (13C) );
+      msg(11); (* incorrect move *)
       _exit q
     _)
   _);
   _GOTO 7452;
 _);
 
-_procedure P6732(_var c: char);
-_var l3v1z, l3v2z, l3v3z:integer; l3v4z:boolean; l3v5z:char;
+_procedure YesOrNo(_var c: char);
+_var x, y, i:integer; isMove:boolean; ch:char;
 _(
-  _for l3v3z := (1C) _to (5C) _do _(
-    P6551(l3v1z, l3v2z, l3v5z, l3v4z);
-    _if (_not l3v4z _and (l3v5z = 'Д')) _or
-        (_not l3v4z _and (l3v5z = 'H')) _then _(
-      c := l3v5z;
+  _for i := 1 _to 5 _do _(
+    readline(x, y, ch, isMove);
+    _if (_not isMove _and (ch = 'Д')) _or
+        (_not isMove _and (ch = 'H')) _then _(
+      c := ch;
       exit;
     _);
-    P5131( (12C) );
+    msg(10); (* enter yes or no *)
   _);
   _GOTO 7452;
 _);
 
-_procedure P6765;
-_var l3v1z:integer; l3v2z:integer; l3v3z: integer; 
+_procedure UserBlack;
+_var pos1:integer; pos2:integer; ret: integer; 
 _(
-  P5252;
+  setup;
   P5272(0);
-  gl389z := true;
+  black := true;
   (L6773) _(
-    P6420(l3v1z, l3v2z, l3v3z);
-    P5646( l3v1z, l3v2z, true, chr(226) );
-    myMove( l3v1z, l3v2z );
-    P6327( l3v1z, l3v2z );
-    P5743;
-    _if (l3v3z = (13C)) _then _(
-      P5131( (7C) );
+    PickWhite(pos1, pos2, ret);
+    DrawMove( pos1, pos2, true, chr(226) ); (* Б *)
+    myMove( pos1, pos2 );
+    doMove( pos1, pos2 );
+    sort;
+    _if ret = 11 _then _(
+      msg(7); (* you lost *)
       exit
     _);
-    P5131( (3C) );
-    P6660(l3v1z, l3v2z, l3v3z);
-    _if l3v3z = 1 _then _(
-      P5131( (7C) );
+    msg(3); (* your move: *)
+    getMove(pos1, pos2, ret);
+    _if ret = 1 _then _(
+      msg(7); (* you lost *)
       exit
     _);
-    P5646( l3v1z, l3v2z, false, chr(126) );
-    P6327( l3v1z, l3v2z );
-    P5743;
+    DrawMove( pos1, pos2, false, chr(126) ); (* Ч *)
+    doMove( pos1, pos2 );
+    sort;
     _goto L6773;
   _)
 _);
 
-_procedure P7047(_var l3a1z, l3a2z:integer; _var l3a3z:_array [0..9] _of integer);
-_var l3v1z, l3v2z, l3v3z, l3v4z, l3v5z, l3v6z, l3v7z, l3v8z: integer;
+_procedure PickBlack(_var pos1, pos2:integer; _var saved:_array [1..4] _of integer);
+_var l3v1z, l3v2z, l3v3z, l3v4z, i, j, cur, hash: integer;
 _(
-  _for l3v5z := (1C) _to (4C) _do _(;
-    (* l3a3z[l3v5z] := pieces[l3v5z]; *)
-    code(=3ИК12,1СЧ561=3ИК12,3ЗЧ5=);
-  _);
-  l3a1z := pieces[4];
-  _for l3v6z := (1C) _to (2C) _do _(;
-    l3v7z :=   F5767;
-    _if (l3v7z = 23735C) _then _(
+  (* saved := pieces; *) _for i := 1 _to 4 _do code(=3ИК12,1СЧ561=3ИК12,3ЗЧ5=);
+  pos1 := pieces[4];
+  _for j := 1 _to 2 _do _(
+    cur :=   posNum;
+    _if cur = 10205 _then _(
       _case rand(6) _of
-      0: l3a2z := (3C);
-      1: l3a2z := (4C);
-      2: l3a2z := (6C);
-      3: l3a2z := (7C);
-      4: l3a2z := (10C);
-      5: l3a2z := (11C)
+      0: pos2 := 3;
+      1: pos2 := 4;
+      2: pos2 := 6;
+      3: pos2 := 7;
+      4: pos2 := 8;
+      5: pos2 := 9
       _end;
-      _if (l3v6z = (2C)) _then _(
-        P6367( l3a2z );
-        _for l3v5z := (1C) _to (4C) _do _(;
-          (* pieces[l3v5z] := l3a3z[l3v5z]; *)
-          code(=3ИК12,3СЧ5=3ИК12,1ЗЧ561=);
-        _);
+      _if j = 2 _then _(
+        flip( pos2 );
+        (* pieces := saved; *) _for i := 1 _to 4 _do code(=3ИК12,3СЧ5=3ИК12,1ЗЧ561=);
       _);
       exit
     _);
     (* 7136 *)
-    l3v8z := F5767 _MOD 698 + 1;
+    hash := posNum _MOD 698 + 1;
    _repeat 
-    _if (F6032(l2v2z@[l3v8z]) = l3v7z) _then _(
-      l3a2z := F6002(l2v2z@[l3v8z], rand(3) + 4);
-      _if (l3v6z = (2C)) _then _(
-        _for l3v5z := (1C) _to (4C) _do _(;
-          (* pieces[l3v5z] := l3a3z[l3v5z]; *)
-          code(=3ИК12,3СЧ5=3ИК12,1ЗЧ561=);  
-        _);
-        P6367( l3a2z );
+    _if (F6032(l2v2z@[hash]) = cur) _then _(
+      pos2 := F6002(l2v2z@[hash], rand(3) + 4);
+      _if (j = 2) _then _(
+        (* pieces := saved; *) _for i := 1 _to 4 _do code(=3ИК12,3СЧ5=3ИК12,1ЗЧ561=);  
+        flip( pos2 );
       _);
-      _if (F6002(l2v2z@[l3v8z], (7C)) = (2C)) _then _(
-        l3a3z[0] := (13C);
+      _if (F6002(l2v2z@[hash], 7) = 2) _then _(
+        saved[1] := 11;
       _);
-      _if (l3a2z = (14C)) _then _(
-        l3a3z[0] := (14C);
+      _if (pos2 = 12) _then _(
+        saved[1] := 12;
       _);
-      P6064(l2v2z@[l3v8z], 7, F6002(l2v2z@[l3v8z], (7C)) + (1C));
+      P6064(l2v2z@[hash], 7, F6002(l2v2z@[hash], 7) + 1);
       exit
     _) _else _(
-      l3v8z := F6002( l2v2z@[l3v8z], (10C)) * (256) + F6002( l2v2z@[l3v8z], (11C)) * (20C) + F6002( l2v2z@[l3v8z], (12C) );
+      hash := F6002( l2v2z@[hash], 8) * 256 +
+        F6002( l2v2z@[hash], 9) * 16 + F6002( l2v2z@[hash], 10);
     _);
-   _until (l3v8z = (3840));
-    _for l3v5z := (1C) _to (4C) _do _(;
-      P6367( pieces[l3v5z] );
-    _);
-    P5743;
+   _until hash = 3840;
+    _for i := 1 _to 4 _do
+      flip( pieces[i] );
+    sort;
   _);
 _);
 
-_procedure P7272;
+_procedure UserWhite;
 _label 1;
-_var l3v1z, l3v2z, l3v3z:integer; l3v4z: _array [1..1] _of integer;
+_var i, l3v2z, l3v3z:integer; l3v4z: _array [1..1] _of integer;
 _(
-  P5252;
-  P5272( (0C) );
-  gl389z := false;
-  _for l3v1z := (1C) _to (698) _do _(;
-    P6064(l2v2z@[l3v1z], (7C), (0C) );
+  setup;
+  P5272(0);
+  black := false;
+  _for i := 1 _to 698 _do _(
+    P6064(l2v2z@[i], 7, 0);
   _);
   1:
-  P5131( (3C) );
-  P6660(l3v2z, l3v3z, l3v4z[1]);
-  _if (l3v4z[1] = (1C)) _then _(
-    P5131( (7C) );
+  msg(3); (* your move: *)
+  getMove(l3v2z, l3v3z, l3v4z[1]);
+  _if (l3v4z[1] = 1) _then _(
+    msg(7); (* you lost *)
     exit
   _);
-  P6327( l3v2z, l3v3z );
-  P5743;
-  P5646( l3v2z, l3v3z, false, chr(226) );
-  (*=c-*)P7047(l3v2z, l3v3z, l3v4z);(*=c+*)
-  _if (l3v4z[1] = (13C)) _then _(
-    P5131( (7C) );
-    P5131( (4C) );
+  doMove( l3v2z, l3v3z );
+  sort;
+  DrawMove( l3v2z, l3v3z, false, chr(226) ); (* Б *)
+  (*=c-*)PickBlack(l3v2z, l3v3z, l3v4z);(*=c+*)
+  _if (l3v4z[1] = 11) _then _(
+    msg(7); (* you lost *)
+    msg(4); (* repetition *)
     exit
   _);
-  _if (l3v4z[1] = (14C)) _then _(
-    P5131( (10C) );
+  _if (l3v4z[1] = 12) _then _(
+    msg(8); (* you won *)
     exit
   _);
-  P5646( l3v2z, l3v3z, true, chr(126) );
-  P6327( l3v2z, l3v3z );
+  DrawMove( l3v2z, l3v3z, true, chr(126) ); (* Ч *)
+  doMove( l3v2z, l3v3z );
   myMove( l3v2z, l3v3z );
-  _if (l3v3z = (0C)) _then _(
-    P5131( (7C) );
+  _if (l3v3z = 0) _then _(
+    msg(7); (* you lost *)
     exit
   _);
-  P5743;
+  sort;
   _goto 1;
 _);
 
 _( (* checkers *)
   checkPerm;
-  readZone( (0C), (400137C) );
+  readZone(0, 400137C);
   l2v1z := ptr(64000C);
   l2v2z := ptr(64101C);
   P6165;
-  gl385z := (1C);
-  P5252;
-  P5131( (1C) );
-  P6732(l2v4z);
-  _if (l2v4z = 'Д') _then
+  dsppos := 1;
+  setup;
+  msg(1); (* need rules? *)
+  YesOrNo(c);
+  _if (c = 'Д') _then
     rules;
   gl390z := true;
-  gl10z := (698);
+  gl10z := 698;
   code(ЗЧ76421=ЗЧ76422,);
   1:
     checkTime;
-    P5131( (5C) );
-    P6732(l2v4z);
-    _if (l2v4z = 'Д') _then 
-      P7272
+    msg(5); (* wanna play White? *)
+    YesOrNo(c);
+    _if (c = 'Д') _then 
+      UserWhite
     _else
-      P6765;
-    P3030( (4C) );
-    P5131( (6C) );
-    P6732(l2v4z);
-  _if (l2v4z = 'H') _then _goto 7452;
+      UserBlack;
+    P3030(4);
+    msg(6); (* play again? *)
+    YesOrNo(c);
+  _if (c = 'H') _then _goto 7452;
   _goto 1;
   7452:
   l2v3z := gl387z;
@@ -1401,8 +1382,8 @@ _(
   write(tempfile,EOT);
   reset(tempfile);
   l3v10z := false;
-  (loop) _for l3v2z := (1C) _to (100) _do _(;
-    _for l3v3z := (1C) _to (6C) _do _(;
+  (loop) _for l3v2z := 1 _to 100 _do _(;
+    _for l3v3z := 1 _to 6 _do _(;
       _if _not eof(tempfile) _then _(
         code(=16ПВ76312,);
         l3v4z[l3v3z] := tempfile@;
@@ -1415,11 +1396,11 @@ _(
     _if l3v10z _then _exit loop;
   _);
   (* 7544 *)
-  P3442( termno, (0C), display);
+  P3442( termno, 0, display);
  7551:
  l3v1z :=   extra71( termno );
   _case l3v1z _of
-  0: _( sleep( (10C) );
+  0: _( sleep(8);
     _goto 7551;
   _);
   1: _(
@@ -1680,16 +1661,16 @@ _(
   code(э0634=,);
   l2v1z := ;
   l2v1z := (l2v1z - gl17z);
-  _if (l2v1z < (0C)) _then exit;
+  _if l2v1z < 0 _then exit;
   code(э05310=,);
   l2v2z := ;
   l2v2z := (l2v2z - gl18z);
-  _if (l2v2z < (0C)) _then exit;
+  _if l2v2z < 0 _then exit;
   gl19z := shift(l2v1z,2);
-  P3030( (37C) );
+  P3030(31);
   (q)
   gl19z := shift(l2v2z,9);
-  P3030( (41C) );
+  P3030(33);
 _);
 _procedure exec(arg:integer);
 _procedure P10640(_var f:text; _var i:integer; j:integer); _( code(ПБ76022=,); _);
@@ -1772,7 +1753,7 @@ _( (* inform *)
   _);
   P3030( (2C) );
 _);
-_procedure P11060;
+_procedure BadCommand;
 _(
   write('ПРИКАЗА ', entered, 'В ');
   ГГ(d21);
@@ -1802,11 +1783,11 @@ _(
   P10672;
 11132:
   checkTime;
-  gl20z := (31C);
+  gl20z := 25;
   TTIN(1);
   gl15z := false;
 11136:
-  _if getCmd(entered, 3C)  _then _(
+  _if getCmd(entered, 3)  _then _(
     _if ('ИГР   ' = entered) _then _(
       _if (tempfile@ = ETX) _then
         _goto 11132
@@ -1841,5 +1822,5 @@ _(
   _) _else
     writeln('НЕ ПОНИМАЮ'); (* 11256 *)
   _goto 11132;
-  P11060;
+  BadCommand;
 _).     
