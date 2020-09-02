@@ -19,6 +19,7 @@ n36 = 36;
 n45 = 45; n11 = 11; LEFT = '{146'; n32 = 32; n76 = 76; n9 = 9;
 n47=47;n1023=1023; n6=6; n100=100; n2=2; n39=39; n4=4; n10=10;
 _type bits = _set _of 0..47; rec = _array[1..10] _of bits;
+  digit='0'..'9';
 _var
 gl10z:integer;
 gl11z:bits;
@@ -938,7 +939,7 @@ _(
     _if ((l3v3z + l3v2z) _IN l3a1z) _then 
       l3v4z := 1
     _else
-      l3v4z := (0C);
+      l3v4z := 0;
     l3v1z := l3v1z * 2 + l3v4z;
   _);
   F6002 := l3v1z;
@@ -972,16 +973,9 @@ _var l3v1z: integer;  l3v2z: char; l3v3z: integer;
 _(
   l3v1z := 0;
   _for l3v3z := 1 _to l3a1z _do _(
-    (* a more efficient implementation of range checking requires alignment *)
-    (q) _exit q;
-    (q) _exit q;
-    (q) _exit q;
-    (q) _exit q;
-    _if l3a2z@ > '9' _then _(
+    _if _not (l3a2z@ _in digit) _then _(
       F6130 := l3v1z;
       exit;
-    (q) _exit q;
-    (q) _exit q;
     _);
     l3v2z := l3a2z@;
     get(l3a2z);
@@ -1120,6 +1114,7 @@ _(
 _);
 
 _procedure readline(_var l3a1z, l3a2z:integer; _var l3a3z:char; _var l3a4z:boolean);
+_type letter='A'..'Z';
 _var i:integer;
 _(
   _for i := 1 _to 5 _do _(
@@ -1130,11 +1125,11 @@ _(
       _goto L6561;
     _);
     _if tempfile@ = 'K' _then _GOTO 7452;
-    _if tempfile@ <= '9' _then _(
+    _if tempfile@  _in digit _then _(
       l3a1z :=   F6130(10, tempfile );
       _if tempfile@ = '-' _then (a) _(
         code(16ПВ76312=,);
-        _if tempfile@ <= '9' _then _(
+        _if tempfile@ _in digit _then _(
           l3a2z := F6130(10, tempfile );
           l3a4z := true;
           exit;
@@ -1143,15 +1138,12 @@ _(
       _) _else _(
         msg(9);
       _);
-    _) _else _if (tempfile@ >= 'A') _and (tempfile@ <= 'M') _then _(
+    _) _else _if tempfile@ _in letter _then _(
       l3a3z := tempfile@;
       l3a4z := false;
       exit;
-    _) _else _if true (* not (tempfile@ _in ['0'..'9','A'..'M']) *) _then _(
-      (q) _exit q;   (q) _exit q;   (q) _exit q;   (q) _exit q;  (q) _exit q;
-      (q) _exit q;   (q) _exit q;   (q) _exit q;   (q) _exit q;
-      msg(9);
-      (q) _exit q;
+    _) _else _if _not (tempfile@ _in digit) _and _not (tempfile@ _in letter) _then _(
+      msg(9); (q) _exit q;
     _); 
   _);
   (* L6656 *)
