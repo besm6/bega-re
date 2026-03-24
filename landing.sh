@@ -1,5 +1,5 @@
 #!/usr/bin/expect --
-spawn $env(HOME)/src/github/dispak/dispak/dispak -s pult2.b6
+spawn /usr/bin/env dispak -s pult2.b6
 expect 	"ПУЛЬТ*\r\n-\r"
 
 send	"з буф=тт\r"
