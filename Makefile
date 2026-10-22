@@ -1,4 +1,4 @@
-.PHONY: demo check demo-bega check-bega solve-checkers
+.PHONY: demo check demo-bega check-bega solve-checkers kalah-book
 
 demo:
 	python3 tools/check.py
@@ -12,3 +12,6 @@ demo-bega check-bega:
 
 solve-checkers:
 	python3 tools/solve-checkers.py
+
+kalah-book:
+	python3 tools/generate-kalah-book.py

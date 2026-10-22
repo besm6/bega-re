@@ -5,7 +5,7 @@ Original Pascal overlays remain unchanged. Each emitted instruction occupies
 one word; short memory operations use UTC for the full 15-bit address.
 Adapted from kadry-re/tools/monitor.py.
 """
-from volume import gost
+from volume import GOST, gost
 
 BASE = 0o60000
 STATE = 0o61400
@@ -56,7 +56,7 @@ class Code:
         return result
 
 
-def monitor(target=0o6420172, output_base=None):
+def monitor(target=0o6420172, output_base=None, game_overlays=False):
     c = Code()
     for name, value in dict(target=target, transfer=0, file=0, index=0,
                             descriptor=0, one=1, maskunit=0o777777,
@@ -75,15 +75,16 @@ def monitor(target=0o6420172, output_base=None):
         c.ins('vjm', address, 0o16)
     def index_start(): load('command'); store('index')
     def advance(): load('index'); c.mem('arx', 'one'); store('index')
-    def copy_context():
+    def copy_context(to_program=True):
         c.ins('xta', 4, 0o13); c.ins('ati', 0o7)
         c.ins('vtm', CONTEXT, 0o10)
         c.ins('vtm', (-61) & 0o77777, 0o11)
-        c.label('restorectx')
-        c.ins('xta', 0, 0o10)
-        c.ins('atx', 0, 0o7)
+        label = 'restorectx' if to_program else 'savectx'
+        c.label(label)
+        c.ins('xta', 0, 0o10 if to_program else 0o7)
+        c.ins('atx', 0, 0o7 if to_program else 0o10)
         c.ins('utm', 1, 0o7); c.ins('utm', 1, 0o10)
-        c.ins('vlm', 'restorectx', 0o11)
+        c.ins('vlm', label, 0o11)
 
     c.label('boot')
     # Load the original JINN resident before installing our two monitor entries.
@@ -115,8 +116,91 @@ def monitor(target=0o6420172, output_base=None):
     c.ins('uj', 0o74012)  # ordinary Pascal procedure return
 
     c.label('exec')
-    # Other JINN blocks are not supplied by these standalone launchers.
-    c.ins('uj', 'quit')
+    if not game_overlays:
+        c.ins('uj', 'quit')
+    else:
+        for name,value in dict(request=0, parent=0o1660730, main=target,
+                               kalah=0o6400230, school=0o2400236,
+                               masklocation=0o777777, returnmain=0,
+                               cmdend=0o377).items():
+            c.const(name,value)
+        # The level-2 exec frame contains its descriptor in slot 3.
+        c.ins('xta', 3, 2); store('request')
+        c.mem('aex', 'parent'); c.ins('uza', 'parent_return')
+        load('request'); c.mem('aax', 'masklocation'); store('request')
+        load('kalah'); c.mem('aax', 'masklocation'); c.mem('aex', 'request')
+        c.ins('uza', 'select_kalah')
+        load('school'); c.mem('aax', 'masklocation'); c.mem('aex', 'request')
+        c.ins('uza', 'select_school')
+        c.ins('uj', 'quit')
+        c.label('select_kalah'); load('kalah'); store('request')
+        c.ins('uj', 'transfer_overlay')
+        c.label('select_school'); load('school'); store('request')
+        c.ins('uj', 'transfer_overlay')
+        c.label('parent_return')
+        load('target'); c.mem('aex', 'main'); c.ins('uza', 'quit')
+        load('main'); store('request')
+        load('one'); store('returnmain')
+        c.label('transfer_overlay')
+        copy_context(False)
+        c.ins('xta', 3, 0o13); store('file')
+        runtime(0o74042)
+        index_start()
+        c.label('readchar')
+        load('file'); c.ins('ati', 0o7)
+        c.ins('wtc', 0, 0o7); c.ins('xta'); store('transfer')
+        load('index'); c.ins('ati', 0o10)
+        load('transfer'); c.ins('atx', 0, 0o10)
+        c.mem('aex', 'end'); c.ins('uza', 'command_saved')
+        runtime(0o74041)
+        advance(); c.ins('uj', 'readchar')
+        c.label('command_saved')
+        # Original flag [27] permits category/side selection in training but
+        # closes tournament play. Select it only for an explicit КАЛ ТРЕН
+        # entry; subsequent commands inside that overlay retain its mode.
+        c.const('trainingflag', 1 << (47-27))
+        c.const('nottraining', ((1 << 48)-1) ^ (1 << (47-27)))
+        c.const('spacechar', GOST.index(' '))
+        c.const('trainingchar', GOST.index('Т'))
+        load('request'); c.mem('aex', 'kalah'); c.ins('u1a', 'training_ready')
+        for i,ch in enumerate('КАЛ'):
+            c.const('kal'+str(i), GOST.index(ch))
+            c.mem('xta', COMMAND+i); c.mem('aex', 'kal'+str(i))
+            c.ins('u1a', 'training_ready')
+        c.mem('xta', CONTEXT+15); c.mem('aax', 'nottraining')
+        c.mem('atx', CONTEXT+15)
+        index_start()
+        c.label('skip_game_word')
+        load('index'); c.ins('ati', 0o10); c.ins('xta', 0, 0o10)
+        c.mem('aex', 'end'); c.ins('uza', 'training_ready')
+        c.ins('xta', 0, 0o10); c.mem('aex', 'spacechar')
+        c.ins('uza', 'skip_training_space')
+        advance(); c.ins('uj', 'skip_game_word')
+        c.label('skip_training_space')
+        advance(); load('index'); c.ins('ati', 0o10)
+        c.ins('xta', 0, 0o10); c.mem('aex', 'spacechar')
+        c.ins('uza', 'skip_training_space')
+        c.ins('xta', 0, 0o10); c.mem('aex', 'trainingchar')
+        c.ins('u1a', 'training_ready')
+        c.mem('xta', CONTEXT+15); c.mem('aox', 'trainingflag')
+        c.mem('atx', CONTEXT+15)
+        c.label('training_ready')
+        load('returnmain'); c.ins('uza', 'command_ready')
+        # КОН in a child block returns to the game prompt, not out of BEGA.
+        # Preserve other commands so, for example, ШАШ can cross back directly.
+        for i,ch in enumerate('КОН'):
+            c.const('kon'+str(i), GOST.index(ch))
+            c.mem('xta', COMMAND+i); c.mem('aex', 'kon'+str(i))
+            c.ins('u1a', 'clear_return')
+        for i,ch in enumerate('ИГР'):
+            c.const('game'+str(i), GOST.index(ch))
+            load('game'+str(i)); c.mem('atx', COMMAND+i)
+        load('cmdend'); c.mem('atx', COMMAND+3)
+        c.label('clear_return')
+        c.ins('xta'); store('returnmain')
+        c.label('command_ready')
+        load('request'); store('target')
+        c.ins('uj', 'launch')
 
     c.label('launch')
     # Start each overlay with a fresh ADSIS; settings at 67000 survive.
