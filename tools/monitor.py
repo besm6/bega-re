@@ -1,4 +1,4 @@
-"""Small standalone host for BIBL's documented 76021/76022 interface.
+"""Small standalone host for JINN's documented 76021/76022 interface.
 
 This is new glue, not a reconstruction of the missing TAMBOV environment.
 Original Pascal overlays remain unchanged. Each emitted instruction occupies
@@ -56,9 +56,9 @@ class Code:
         return result
 
 
-def monitor():
+def monitor(target=0o6420172, output_base=None):
     c = Code()
-    for name, value in dict(target=0o6420172, transfer=0, file=0, index=0,
+    for name, value in dict(target=target, transfer=0, file=0, index=0,
                             descriptor=0, one=1, maskunit=0o777777,
                             nextpage=1 << 30 | 1, read=1 << 39,
                             adsis=0o10360000400006, resident=0o10370000270031,
@@ -115,12 +115,18 @@ def monitor():
     c.ins('uj', 0o74012)  # ordinary Pascal procedure return
 
     c.label('exec')
-    # Other JINN blocks are not supplied in this local BIBL installation.
+    # Other JINN blocks are not supplied by these standalone launchers.
     c.ins('uj', 'quit')
 
     c.label('launch')
     # Start each overlay with a fresh ADSIS; settings at 67000 survive.
     c.ins('utc', 'adsis'); c.ins('e70')
+    if output_base is not None:
+        c.const('outputbase', output_base)
+        # BEGA's landMsg sends OUTPUT from 71000 explicitly. Match the host's
+        # ADSIS stream setup to that buffer without changing the program.
+        load('outputbase'); c.mem('atx', 0o75205)
+        c.mem('atx', 0o75224)
     load('target'); c.mem('aax', 'maskunit'); c.mem('aox', 'read'); store('descriptor')
     load('target'); c.ins('asn', 64+18); c.ins('ati', 0o11)
     c.label('loadpage')
