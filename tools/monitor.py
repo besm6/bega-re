@@ -30,13 +30,17 @@ class Code:
         self.ins(op, 0, reg)
 
     def const(self, name, value):
-        self.labels[name] = STATE + len(self.data)
+        address = STATE + len(self.data)
+        if address >= CONTEXT:
+            address += 0o100  # reserve the 62-word shared context
+        assert address < BASE + 1024
+        self.labels[name] = address
         self.data[name] = value
 
     def build(self):
         short = dict(xta=0o10, atx=0, aex=0o12, aax=0o11, arx=0o13,
                      aox=0o15, asn=0o36, ati=0o40, ita=0o42, mtj=0o44,
-                     e70=0o70, ntr=0o37)
+                     e70=0o70, e71=0o71, ntr=0o37)
         long = dict(utc=0o22, wtc=0o23, vtm=0o24, utm=0o25, uza=0o26,
                     u1a=0o27, uj=0o30, vjm=0o31, v1m=0o35, vlm=0o37)
         result = [1 << 48] * 1024

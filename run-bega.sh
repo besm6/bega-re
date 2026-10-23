@@ -9,5 +9,5 @@ elif [ ! -f "$volumes/kalah.bin" ]; then
 fi
 run_home="$root/build/bega/home"
 mkdir -p "$run_home"
-{ printf 'арх игра,40,100\nигра\n'; cat; } |
-    HOME="$run_home" "${DISPAK:-dispak}" --725 --path="$volumes:/usr/local/share/besm6" -q "$@" "$root/bega.b6"
+HOME="$run_home" exec python3 "$root/tools/run-session.py" игра \
+    "${DISPAK:-dispak}" --725 --path="$volumes:/usr/local/share/besm6" -q "$@" "$root/bega.b6"
